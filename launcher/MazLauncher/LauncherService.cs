@@ -355,6 +355,12 @@ public sealed class LauncherService
         CleanupOldMazClientJars(gameDir);
         await EnsureMazClientVersionAsync(gameDir, mazClientVersion, minecraftVersion, progress);
 
+        // Prepare the overlays after the compatibility profile and its game directory
+        // are fully initialized, immediately before Minecraft reads options.txt.
+        // This applies the same Maz visual-pack stack to 1.21.11 and 26.2.
+        progress?.Invoke("Applying Maz visual palette: Low Fire, Low Shield and Smaller Totem...", 88);
+        await new ManagedResourcePackService().EnsureForMazClientAsync(mazClientVersion, minecraftVersion);
+
         var fabricVersion = $"fabric-loader-{FabricLoaderVersion}-{minecraftVersion}";
         await LaunchAsync(gameDir, fabricVersion, session, progress);
     }
