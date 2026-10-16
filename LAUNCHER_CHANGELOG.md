@@ -1,3 +1,8 @@
+## 0.6.75
+
+- Scale the entire MazLauncher interface proportionally as the window is resized or restored from maximized mode.
+- Keep tabs, buttons, labels and overlays aligned at compact window sizes without cropping the fixed design layout.
+
 ## 0.6.74
 
 - Apply the existing Maz visual pack stack (Low Fire, Low Shield PvP and Smaller Totem) to Minecraft 1.21.11 as part of the final compatibility launch pipeline.

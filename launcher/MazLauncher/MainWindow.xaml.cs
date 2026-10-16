@@ -25,6 +25,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        EnableResponsiveLayout();
         uiHttp.DefaultRequestHeaders.UserAgent.ParseAdd($"MazLauncher/{CloudUpdateService.CurrentLauncherVersion}");
         LoadPreferencesIntoUi();
         AccountsList.ItemsSource = accountChoices;
@@ -33,6 +34,23 @@ public partial class MainWindow : Window
         SetLaunchButtons(false);
         UpdateAccountControls();
         Loaded += MainWindow_Loaded;
+    }
+
+    private void EnableResponsiveLayout()
+    {
+        // Scale the entire designed layout together, including tab pages and overlays.
+        // Viewbox adapts to both restored and maximized window sizes without clipping.
+        Content = null;
+        RootGrid.Width = 864;
+        RootGrid.Height = 594;
+        RootGrid.Margin = new Thickness(0);
+        SetResourceReference(BackgroundProperty, "Bg");
+        Content = new Viewbox
+        {
+            Stretch = Stretch.Uniform,
+            StretchDirection = StretchDirection.Both,
+            Child = RootGrid
+        };
     }
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
