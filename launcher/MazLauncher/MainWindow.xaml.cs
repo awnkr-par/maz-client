@@ -259,7 +259,7 @@ public partial class MainWindow : Window
 
     private void AccountsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (AccountsList?.SelectedItem is not LauncherAccountChoice choice) return;
+        if (AccountsList?.SelectedItem is not LauncherAccountChoice choice) { UpdateAccountControls(); return; }
         session = choice.Session;
         AccountText.Text = choice.IsOnline ? $"{choice.Username} (Microsoft)" : $"{choice.Username} (Local)";
         SetLaunchButtons(session != null);
@@ -287,6 +287,26 @@ public partial class MainWindow : Window
         AccountsList.SelectedItem = accountChoices.Last();
         LocalAccountNameBox.Clear();
         StatusText.Text = $"Created local account {username}";
+    }
+
+    private void DeleteLocalAccountButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (AccountsList.SelectedItem is not LauncherAccountChoice choice || !choice.IsLocal) return;
+        if (MessageBox.Show($"Delete local account {choice.Username}? This removes the saved profile from MazLauncher, not Minecraft worlds or game files.",
+                "Delete local account", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+
+        var remaining = accountChoices.FirstOrDefault(a => !ReferenceEquals(a, choice));
+        accountChoices.Remove(choice);
+        SaveLocalAccounts();
+        AccountsList.SelectedItem = remaining;
+        if (remaining == null)
+        {
+            session = null;
+            AccountText.Text = "No account selected";
+            SetLaunchButtons(false);
+        }
+        UpdateAccountControls();
+        StatusText.Text = $"Deleted local account {choice.Username}";
     }
 
     private void LoadLocalAccounts()
@@ -515,6 +535,7 @@ public partial class MainWindow : Window
     private void UpdateAccountControls()
     {
         var onlineSelected = AccountsList?.SelectedItem is LauncherAccountChoice choice && choice.IsOnline;
+        DeleteLocalAccountButton.IsEnabled = AccountsList?.SelectedItem is LauncherAccountChoice selected && selected.IsLocal;
         SignInButton.Visibility = onlineSelected ? Visibility.Collapsed : Visibility.Visible;
         SignOutButton.Visibility = accountChoices.Any(a => a.IsOnline) ? Visibility.Visible : Visibility.Collapsed;
     }

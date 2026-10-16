@@ -170,6 +170,7 @@
                         <TextBlock Text="LOCAL ACCOUNT" Foreground="{DynamicResource Muted}" FontWeight="Bold" Margin="0,0,0,7"/>
                         <TextBox x:Name="LocalAccountNameBox" Height="38" Padding="10,8" ToolTip="Choose a local Minecraft username"/>
                         <Button Style="{StaticResource AccentButton}" x:Name="CreateLocalAccountButton" Content="CREATE LOCAL ACCOUNT" Margin="0,9,0,0" Click="CreateLocalAccountButton_Click"/>
+                        <Button Style="{StaticResource MazButton}" x:Name="DeleteLocalAccountButton" Content="DELETE SELECTED LOCAL ACCOUNT" Margin="0,8,0,0" IsEnabled="False" Click="DeleteLocalAccountButton_Click"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="2">
                         <TextBlock Text="MICROSOFT ACCOUNT" Foreground="{DynamicResource Muted}" FontWeight="Bold" Margin="0,0,0,7"/>
