@@ -1,3 +1,9 @@
+## 0.6.74
+
+- Apply the existing Maz visual pack stack (Low Fire, Low Shield PvP and Smaller Totem) to Minecraft 1.21.11 as part of the final compatibility launch pipeline.
+- Prepare and enable managed overlays immediately before Minecraft starts, after the game directory and Fabric profile are initialized.
+- Keep Minecraft 26.2 support and the existing dark Maz menu palette intact.
+
 ## 0.6.73
 
 - Added a Delete Selected Local Account button to the Accounts tab.
