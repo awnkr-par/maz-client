@@ -411,9 +411,6 @@ public partial class MainWindow : Window
             version = LauncherService.CompatibilityMazClientVersion;
         }
 
-        UpdateProgress("Preparing Low Fire, Low Shield, and Smaller Totem resource packs...", 41);
-        await managedResourcePacks.EnsureForMazClientAsync(version, minecraftVersion, AddLauncherLog);
-
         await RunLaunchAsync(
             () => launcher.LaunchMazAsync(session, version, minecraftVersion, UpdateProgress),
             $"MazClient {version} • Minecraft {minecraftVersion}");
