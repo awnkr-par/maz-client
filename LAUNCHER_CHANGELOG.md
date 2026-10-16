@@ -1,3 +1,9 @@
+## 0.6.73
+
+- Added a Delete Selected Local Account button to the Accounts tab.
+- Delete is available only when a local account is selected, and asks for confirmation.
+- Removes the local account from saved launcher profiles without touching Minecraft worlds or Microsoft accounts.
+
 ## 0.6.72
 
 - Replaced the Mods tab's raw JAR filename list with individual mod rows.
