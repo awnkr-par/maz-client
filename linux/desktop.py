@@ -192,6 +192,7 @@ class MazWindow(QMainWindow):
         self.account_list = QListWidget()
         accounts.addWidget(self.account_list)
         self.refresh_accounts()
+        self.account_list.currentTextChanged.connect(self.select_account)
         self.name_entry = QLineEdit()
         self.name_entry.setPlaceholderText("Minecraft username (3–16 characters)")
         accounts.addWidget(self.name_entry)
@@ -225,6 +226,9 @@ class MazWindow(QMainWindow):
     def refresh_accounts(self):
         self.account_list.clear()
         self.account_list.addItems(self.names)
+        active = self.preferences.get("active_account")
+        if active in self.names:
+            self.account_list.setCurrentRow(self.names.index(active))
 
     def add_account(self):
         name = self.name_entry.text().strip()
@@ -238,6 +242,7 @@ class MazWindow(QMainWindow):
         save_accounts(self.names)
         self.refresh_accounts()
         self.name_entry.clear()
+        self.account_list.setCurrentRow(self.names.index(name))
         self.status.setText("Local account created")
 
     def delete_account(self):
@@ -248,6 +253,9 @@ class MazWindow(QMainWindow):
             return
         self.names.remove(item.text())
         save_accounts(self.names)
+        if self.preferences["active_account"] == item.text():
+            self.preferences["active_account"] = None
+            save_preferences(self.preferences)
         self.refresh_accounts()
         self.status.setText("Local account deleted")
 
