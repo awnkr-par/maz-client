@@ -24,6 +24,34 @@ LIGHT = {"bg":"#F8FAFC","surface":"#FFFFFF","surface2":"#E2E8F0","hover":"#CBD5E
 def accounts_path():
     return config_dir() / "local-accounts.json"
 
+def preferences_path():
+    return config_dir() / "preferences.json"
+
+def load_preferences():
+    defaults = {"light_theme": False, "active_account": None,
+                "keep_open": True, "check_updates": True,
+                "high_contrast": False, "large_text": False,
+                "strong_focus": False, "reduced_motion": False}
+    try:
+        stored = json.loads(preferences_path().read_text(encoding="utf-8"))
+        if isinstance(stored, dict):
+            for key in defaults:
+                if key in stored and isinstance(stored[key], type(defaults[key])) and key != "active_account":
+                    defaults[key] = stored[key]
+            name = stored.get("active_account")
+            if name is None or isinstance(name, str):
+                defaults["active_account"] = name
+    except (FileNotFoundError, ValueError, OSError, TypeError):
+        pass
+    return defaults
+
+def save_preferences(prefs):
+    path = preferences_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(prefs, indent=2), encoding="utf-8")
+    tmp.replace(path)
+
 def load_accounts():
     try:
         data = json.loads(accounts_path().read_text(encoding="utf-8"))
@@ -221,6 +249,18 @@ class MazWindow(QMainWindow):
         self.refresh_accounts()
         self.status.setText("Local account deleted")
 
+    def select_account(self, name):
+        if name and name in self.names:
+            self.preferences["active_account"] = name
+            save_preferences(self.preferences)
+            self.status.setText("Selected local account: " + name)
+
+    def set_preference(self, key, value):
+        self.preferences[key] = value
+        save_preferences(self.preferences)
+        if key in ("large_text", "high_contrast", "strong_focus"):
+            self.apply_theme()
+
     def select_skin(self, preview):
         path, _ = QFileDialog.getOpenFileName(self, "Import skin", str(Path.home()), "PNG images (*.png)")
         if path:
@@ -257,7 +297,7 @@ class MazWindow(QMainWindow):
     def apply_theme(self):
         c = LIGHT if self.light else DARK
         self.setStyleSheet(f"""
-            QWidget {{ background: {c['bg']}; color: {c['text']}; font-family: 'Segoe UI', 'Noto Sans', sans-serif; font-size: 13px; }}
+            QWidget {{ background: {c['bg']}; color: {c['text']}; font-family: 'Segoe UI', 'Noto Sans', sans-serif; font-size: {font_size}px; }}
             QLabel#title {{ font-size: 30px; font-weight: 700; }}
             QLabel#logo {{ background: {c['accent']}; color: white; border-radius: 12px; font-size: 30px; font-weight: bold; }}
             QTabWidget::pane {{ border: none; background: {c['surface']}; }}
