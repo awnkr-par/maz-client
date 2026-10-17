@@ -213,11 +213,19 @@ class MazWindow(QMainWindow):
     def build_settings(self):
         l = QVBoxLayout(self.settings_page)
         l.addWidget(QLabel("SETTINGS"))
-        for label in ["Keep launcher open after Minecraft starts",
-                      "Check for launcher updates on startup", "High contrast",
-                      "Larger launcher text", "Stronger keyboard focus indicators",
-                      "Reduce motion and visual effects"]:
-            l.addWidget(QCheckBox(label))
+        options = [
+            ("keep_open", "Keep launcher open after Minecraft starts"),
+            ("check_updates", "Check for launcher updates on startup"),
+            ("high_contrast", "High contrast"),
+            ("large_text", "Larger launcher text"),
+            ("strong_focus", "Stronger keyboard focus indicators"),
+            ("reduced_motion", "Reduce motion and visual effects"),
+        ]
+        for key, label in options:
+            checkbox = QCheckBox(label)
+            checkbox.setChecked(self.preferences[key])
+            checkbox.toggled.connect(lambda checked, k=key: self.set_preference(k, checked))
+            l.addWidget(checkbox)
         l.addStretch()
         back = QPushButton("BACK")
         back.clicked.connect(self.toggle_settings)
