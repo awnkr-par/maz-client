@@ -1,4 +1,4 @@
-name: Build MazLauncher Linux Preview
+name: Publish MazLauncher Linux Preview
 
 on:
   workflow_dispatch:
@@ -9,7 +9,11 @@ on:
       - '.github/workflows/linux-launcher.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: mazlauncher-linux-release
+  cancel-in-progress: true
 
 jobs:
   linux-preview:
@@ -22,8 +26,25 @@ jobs:
       - name: Publish Linux x64
         run: dotnet publish launcher/MazLauncher.Linux/MazLauncher.Linux.csproj -c Release -r linux-x64 --self-contained true -o out/linux-x64
       - name: Package
-        run: tar -czf MazLauncher-Linux-x64-preview.tar.gz -C out/linux-x64 .
+        run: |
+          chmod +x out/linux-x64/MazLauncher.Linux
+          tar -czf MazLauncher-Linux-x64-preview.tar.gz -C out/linux-x64 .
       - uses: actions/upload-artifact@v4
         with:
           name: MazLauncher-Linux-x64-preview
           path: MazLauncher-Linux-x64-preview.tar.gz
+      - name: Publish Linux-only release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' launcher/MazLauncher.Linux/MazLauncher.Linux.csproj | head -1)
+          test -n "$VERSION"
+          TAG="linux-launcher-v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" MazLauncher-Linux-x64-preview.tar.gz --clobber
+          else
+            gh release create "$TAG" MazLauncher-Linux-x64-preview.tar.gz --title "MazLauncher Linux v$VERSION (Preview)" --notes "Linux x64 early preview. Does not launch Minecraft yet." --prerelease --target "$GITHUB_SHA"
+          fi
