@@ -72,7 +72,8 @@ class MazWindow(QMainWindow):
         self.setWindowTitle("MazLauncher")
         self.resize(920, 650)
         self.setMinimumSize(820, 590)
-        self.light = False
+        self.preferences = load_preferences()
+        self.light = self.preferences["light_theme"]
         self.names = load_accounts()
         self.settings_open = False
         self.root = QWidget()
@@ -121,6 +122,7 @@ class MazWindow(QMainWindow):
         outer.addWidget(self.progress)
         self.status = QLabel("Ready — Linux preview; launching not implemented")
         outer.addWidget(self.status)
+        self.theme_button.setText("☾ DARK" if self.light else "☀ LIGHT")
         self.apply_theme()
 
     def page(self, name):
@@ -291,11 +293,17 @@ class MazWindow(QMainWindow):
 
     def toggle_theme(self):
         self.light = not self.light
+        self.preferences["light_theme"] = self.light
+        save_preferences(self.preferences)
         self.theme_button.setText("☾ DARK" if self.light else "☀ LIGHT")
         self.apply_theme()
 
     def apply_theme(self):
-        c = LIGHT if self.light else DARK
+        c = dict(LIGHT if self.light else DARK)
+        if self.preferences.get("high_contrast"):
+            c["border"] = "#000000" if self.light else "#FFFFFF"
+            c["muted"] = c["text"]
+        font_size = 16 if self.preferences.get("large_text") else 13
         self.setStyleSheet(f"""
             QWidget {{ background: {c['bg']}; color: {c['text']}; font-family: 'Segoe UI', 'Noto Sans', sans-serif; font-size: {font_size}px; }}
             QLabel#title {{ font-size: 30px; font-weight: 700; }}
