@@ -6,7 +6,7 @@ on:
     branches: [ main ]
     paths:
       - 'src/**'
-      - 'launcher/**'
+      - 'launcher/MazLauncher/**'
       - 'build.gradle'
       - 'gradle.properties'
       - 'settings.gradle'
