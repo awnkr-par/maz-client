@@ -1,0 +1,29 @@
+name: Build MazLauncher Linux Preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'launcher/MazLauncher.Linux/**'
+      - '.github/workflows/linux-launcher.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  linux-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish Linux x64
+        run: dotnet publish launcher/MazLauncher.Linux/MazLauncher.Linux.csproj -c Release -r linux-x64 --self-contained true -o out/linux-x64
+      - name: Package
+        run: tar -czf MazLauncher-Linux-x64-preview.tar.gz -C out/linux-x64 .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MazLauncher-Linux-x64-preview
+          path: MazLauncher-Linux-x64-preview.tar.gz
