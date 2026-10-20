@@ -1,3 +1,9 @@
+## 0.6.76
+
+- Prevent launcher releases from silently overwriting older version tags when a new release cannot be created.
+- Preserve unrelated assets when updating an existing release, so Windows and Linux installers can share a release safely.
+- Verify the newly uploaded Windows installer by name without assuming the release contains only one platform asset.
+
 ## 0.6.75
 
 - Scale the entire MazLauncher interface proportionally as the window is resized or restored from maximized mode.
