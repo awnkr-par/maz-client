@@ -64,8 +64,13 @@ jobs:
         run: |
           set -euo pipefail
           short="${SHA:0:7}"
-          version="0.1.${GITHUB_RUN_NUMBER}"
+          version="$(sed -n 's/.*<Version>\([^<]*\)<\/Version>.*/\1/p' launcher/MazLauncher.Linux/MazLauncher.Linux.csproj | head -n1)"
+          test -n "$version" || { echo "Missing launcher version" >&2; exit 1; }
           tag="linux-v${version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; bump the project version before publishing." >&2
+            exit 1
+          fi
           {
             echo "# MazLauncher Linux release"
             echo
