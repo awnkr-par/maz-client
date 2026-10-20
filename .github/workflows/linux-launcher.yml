@@ -15,7 +15,7 @@ on:
       - '.github/workflows/linux-launcher.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   linux-preview:
@@ -41,3 +41,44 @@ jobs:
         with:
           name: MazLauncher-Linux-deb-preview
           path: dist/*.deb
+
+  publish-linux-prerelease:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/linux-launcher-foundation'
+    needs: linux-preview
+    runs-on: ubuntu-latest
+    concurrency:
+      group: maz-linux-prerelease
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: MazLauncher-Linux-*-preview
+          merge-multiple: true
+          path: release-assets
+      - name: Publish development prerelease with changelog
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          short="${SHA:0:7}"
+          tag="linux-dev-${short}"
+          {
+            echo "# MazLauncher Linux development preview"
+            echo
+            echo "Build: \`${short}\`"
+            echo
+            echo "## What changed"
+            git log -1 --format='- %s'
+            echo
+            echo "## Contents"
+            echo "- Avalonia Linux x64 preview archive"
+            echo "- Debian development preview package"
+            echo
+            echo "## Known limitations"
+            echo "- Linux Minecraft launch and Microsoft login are not fully implemented."
+            echo "- This is a test prerelease, not a stable release."
+          } > release-notes.md
+          gh release create "$tag" release-assets/* --target "$SHA" --title "MazLauncher Linux dev ${short}" --notes-file release-notes.md --prerelease
