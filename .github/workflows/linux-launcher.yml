@@ -64,11 +64,12 @@ jobs:
         run: |
           set -euo pipefail
           short="${SHA:0:7}"
-          tag="linux-${short}"
+          version="0.1.${GITHUB_RUN_NUMBER}"
+          tag="linux-v${version}"
           {
             echo "# MazLauncher Linux release"
             echo
-            echo "Build: \`${short}\`"
+            echo "Version: \`${version}\` (commit \`${short}\`)"
             echo
             echo "## What changed"
             git log -1 --format='- %s'
@@ -81,4 +82,4 @@ jobs:
             echo "- Linux Minecraft launch and Microsoft login are not fully implemented."
             echo "- Some Linux features are still under development; see limitations above."
           } > release-notes.md
-          gh release create "$tag" release-assets/* --target "$SHA" --title "MazLauncher Linux ${short}" --notes-file release-notes.md
+          gh release create "$tag" release-assets/* --target "$SHA" --title "MazLauncher Linux v${version}" --notes-file release-notes.md
