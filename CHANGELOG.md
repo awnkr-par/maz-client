@@ -1,3 +1,9 @@
+## 1.11.2
+
+- FPS Booster MAX FPS profile now targets a 240 FPS limit instead of leaving a lower configured cap in place.
+- Restores the prior FPS cap when the booster is disabled, and persists the 240 FPS target preference.
+- Displays the current FPS cap in the FPS Booster screen. A 240 FPS cap is a ceiling, not a guarantee of 240 rendered frames; VSync, GPU and CPU bottlenecks still apply.
+
 ## 1.11.1
 
 ### FPS and HUD allocation improvements
