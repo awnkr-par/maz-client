@@ -1,8 +1,8 @@
 ## 1.11.2
 
-- FPS Booster MAX FPS profile now targets a 240 FPS limit instead of leaving a lower configured cap in place.
-- Restores the prior FPS cap when the booster is disabled, and persists the 240 FPS target preference.
-- Displays the current FPS cap in the FPS Booster screen. A 240 FPS cap is a ceiling, not a guarantee of 240 rendered frames; VSync, GPU and CPU bottlenecks still apply.
+- Clarify that FPS Booster's MAX FPS profile optimizes entity distance, particles and entity shadows without setting an artificial 240 FPS ceiling.
+- Show Minecraft's current FPS limit in the FPS Booster interface so VSync and cap issues are easier to diagnose.
+- The goal is higher real-world FPS in singleplayer and multiplayer; results depend on hardware and rendering workload.
 
 ## 1.11.1
 
