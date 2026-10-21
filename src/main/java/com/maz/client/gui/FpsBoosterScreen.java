@@ -34,7 +34,7 @@ public class FpsBoosterScreen extends Screen {
         readonly(g,l+22,r-22,t+98,"Render Distance",Minecraft.getInstance().options.renderDistance().get()+" chunks");
         readonly(g,l+22,r-22,t+136,"Simulation Distance",Minecraft.getInstance().options.simulationDistance().get()+" chunks");
 
-        g.drawString(font,"FPS Booster Controls  |  Current cap: "+Minecraft.getInstance().options.framerateLimit().get()+" FPS",l+22,t+182,TEXT,false);
+        g.drawString(font,"FPS Booster  |  Cap: "+Minecraft.getInstance().options.framerateLimit().get()+"  |  VSync: "+(Minecraft.getInstance().options.enableVsync().get()?"ON":"OFF"),l+22,t+182,TEXT,false);
         value(g,l+22,r-22,t+198,"Entity Distance",booster==null?"-":booster.getEntityDistancePercent()+"%");
         value(g,l+22,r-22,t+236,"Particle Density",booster==null?"-":particleLabel(booster.getParticleKeepEvery()));
         toggle(g,l+22,r-22,t+274,"Entity Shadows",booster!=null&&booster.getEntityShadows());
