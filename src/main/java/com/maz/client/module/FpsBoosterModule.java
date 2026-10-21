@@ -16,8 +16,6 @@ public class FpsBoosterModule extends Module {
 
     private Double previousEntityDistanceScaling;
     private Boolean previousEntityShadows;
-    private Integer previousFpsLimit;
-    private boolean target240Fps = true;
 
     private int entityDistancePercent = 50;
     private int particleKeepEvery = 16;
@@ -39,13 +37,6 @@ public class FpsBoosterModule extends Module {
 
     public int getParticleKeepEvery() {
         return particleKeepEvery;
-    }
-
-    public boolean getTarget240Fps() { return target240Fps; }
-
-    public void setTarget240Fps(boolean value) {
-        target240Fps = value;
-        settingsChanged();
     }
 
     public boolean getEntityShadows() {
@@ -71,7 +62,6 @@ public class FpsBoosterModule extends Module {
         entityDistancePercent = 50;
         particleKeepEvery = 32;
         entityShadows = false;
-        target240Fps = true;
 
         if (!isEnabled()) {
             setEnabled(true);
@@ -87,7 +77,6 @@ public class FpsBoosterModule extends Module {
 
         previousEntityDistanceScaling = client.options.entityDistanceScaling().get();
         previousEntityShadows = client.options.entityShadows().get();
-        previousFpsLimit = client.options.framerateLimit().get();
 
         applyProfile();
     }
@@ -103,11 +92,6 @@ public class FpsBoosterModule extends Module {
             client.options.entityShadows().set(previousEntityShadows);
         }
 
-        if (previousFpsLimit != null && target240Fps) {
-            client.options.framerateLimit().set(previousFpsLimit);
-        }
-
-        previousFpsLimit = null;
         previousEntityDistanceScaling = null;
         previousEntityShadows = null;
     }
@@ -124,8 +108,6 @@ public class FpsBoosterModule extends Module {
 
         client.options.entityDistanceScaling().set(Math.min(baseEntity, entityDistancePercent / 100.0D));
         client.options.entityShadows().set(entityShadows);
-        if (target240Fps) client.options.framerateLimit().set(240);
-        else if (previousFpsLimit != null) client.options.framerateLimit().set(previousFpsLimit);
     }
 
     private void settingsChanged() {
@@ -139,7 +121,6 @@ public class FpsBoosterModule extends Module {
         entityDistancePercent = parseInt(properties.getProperty(prefix + "entityDistancePercent"), entityDistancePercent, 50, 150);
         particleKeepEvery = parseInt(properties.getProperty(prefix + "particleKeepEvery"), particleKeepEvery, 1, 32);
         entityShadows = Boolean.parseBoolean(properties.getProperty(prefix + "entityShadows", Boolean.toString(entityShadows)));
-        target240Fps = Boolean.parseBoolean(properties.getProperty(prefix + "target240Fps", Boolean.toString(target240Fps)));
     }
 
     @Override
@@ -150,7 +131,6 @@ public class FpsBoosterModule extends Module {
         properties.setProperty(prefix + "entityDistancePercent", Integer.toString(entityDistancePercent));
         properties.setProperty(prefix + "particleKeepEvery", Integer.toString(particleKeepEvery));
         properties.setProperty(prefix + "entityShadows", Boolean.toString(entityShadows));
-        properties.setProperty(prefix + "target240Fps", Boolean.toString(target240Fps));
     }
 
     private static int parseInt(String value, int fallback, int min, int max) {
