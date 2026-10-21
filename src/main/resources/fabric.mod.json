@@ -3,7 +3,7 @@
   "id": "maz-client",
   "version": "${version}",
   "name": "MazClient",
-  "description": "MazClient for Minecraft 1.21.11",
+  "description": "MazClient for Minecraft 26.2",
   "authors": [
     "Parsley Ohxi"
   ],
@@ -20,8 +20,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.19.5",
-    "minecraft": "1.21.11",
-    "java": ">=21",
+    "minecraft": "26.2",
+    "java": ">=25",
     "fabric-api": "*"
   }
 }
