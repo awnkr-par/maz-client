@@ -18,6 +18,17 @@ public class ParticleGroupMixin {
     private static boolean maz$modulesResolved;
     private static int maz$particlesUntilKeep;
     private static int maz$lastKeepEvery = -1;
+    private static int maz$cachedKeepEvery = 1;
+    private static boolean maz$cachedBoosterEnabled;
+    private static boolean maz$cachedNoParticles;
+
+    /** Resolve module state once per client tick rather than for each particle. */
+    public static void maz$refreshParticleSettings() {
+        maz$resolveModules();
+        maz$cachedNoParticles = maz$noParticles != null && maz$noParticles.isEnabled();
+        maz$cachedBoosterEnabled = maz$fpsBooster != null && maz$fpsBooster.isEnabled();
+        maz$cachedKeepEvery = maz$cachedBoosterEnabled ? maz$fpsBooster.getParticleKeepEvery() : 1;
+    }
     private static Module maz$noParticles;
     private static FpsBoosterModule maz$fpsBooster;
 
@@ -26,21 +37,18 @@ public class ParticleGroupMixin {
             Particle particle,
             CallbackInfo ci
     ) {
-        maz$resolveModules();
-
-        if (maz$noParticles != null && maz$noParticles.isEnabled()) {
+        if (maz$cachedNoParticles) {
             ci.cancel();
             return;
         }
 
-        FpsBoosterModule fpsBooster = maz$fpsBooster;
-        if (fpsBooster == null || !fpsBooster.isEnabled()) {
+        if (!maz$cachedBoosterEnabled) {
             maz$lastKeepEvery = -1;
             maz$particlesUntilKeep = 0;
             return;
         }
 
-        int keepEvery = fpsBooster.getParticleKeepEvery();
+        int keepEvery = maz$cachedKeepEvery;
         if (keepEvery <= 1) {
             maz$lastKeepEvery = keepEvery;
             maz$particlesUntilKeep = 0;
