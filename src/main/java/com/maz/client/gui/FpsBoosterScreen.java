@@ -34,13 +34,13 @@ public class FpsBoosterScreen extends Screen {
         readonly(g,l+22,r-22,t+98,"Render Distance",Minecraft.getInstance().options.renderDistance().get()+" chunks");
         readonly(g,l+22,r-22,t+136,"Simulation Distance",Minecraft.getInstance().options.simulationDistance().get()+" chunks");
 
-        g.drawString(font,"FPS Booster Controls",l+22,t+182,TEXT,false);
+        g.drawString(font,"FPS Booster Controls  |  Current cap: "+Minecraft.getInstance().options.framerateLimit().get()+" FPS",l+22,t+182,TEXT,false);
         value(g,l+22,r-22,t+198,"Entity Distance",booster==null?"-":booster.getEntityDistancePercent()+"%");
         value(g,l+22,r-22,t+236,"Particle Density",booster==null?"-":particleLabel(booster.getParticleKeepEvery()));
         toggle(g,l+22,r-22,t+274,"Entity Shadows",booster!=null&&booster.getEntityShadows());
         boolean maxHover=inside(mx,my,l+22,t+310,r-22,t+338);
         g.fill(l+22,t+310,r-22,t+338,maxHover?0xFF6875FF:ACCENT);
-        g.drawCenteredString(font,"MAX FPS",(l+r)/2,t+320,0xFFFFFFFF);
+        g.drawCenteredString(font,"MAX FPS (240 CAP)",(l+r)/2,t+320,0xFFFFFFFF);
 
         boolean backHover=inside(mx,my,l+22,b-42,r-22,b-14); g.fill(l+22,b-42,r-22,b-14,backHover?0xFF6875FF:ACCENT); g.drawCenteredString(font,"Back",(l+r)/2,b-32,0xFFFFFFFF); super.render(g,mx,my,d);
     }
