@@ -1,3 +1,9 @@
+## 0.6.77
+
+- Remove partial launcher installer downloads and their temporary directories when downloading or SHA-256 verification fails.
+- Clean up installer files if starting the downloaded Windows installer fails.
+- Preserve the original update failure when best-effort temporary-file cleanup is unsuccessful.
+
 ## 0.6.76
 
 - Prevent launcher releases from silently overwriting older version tags when a new release cannot be created.
