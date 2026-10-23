@@ -37,6 +37,7 @@ import com.maz.client.module.SpeedModule;
 import com.maz.client.module.ToggleSneakModule;
 import com.maz.client.module.ToggleSprintModule;
 import com.maz.client.module.ZoomModule;
+import com.maz.client.performance.ParticleFilterState;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
@@ -172,6 +173,7 @@ public class MazClient implements ClientModInitializer {
                 client.setScreen(new MazMenuScreen());
             }
 
+            ParticleFilterState.refresh();
             ModuleHotkeys.tick();
             MODULE_MANAGER.tick();
         });
