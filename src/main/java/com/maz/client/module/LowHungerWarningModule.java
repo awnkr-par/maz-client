@@ -37,8 +37,9 @@ public final class LowHungerWarningModule extends Module {
 
         if (severity.ordinal() > lastSeverity.ordinal()) {
             String label = severity == Severity.CRITICAL ? "Critical hunger" : "Low hunger";
-            client.gui.hud.getChat().addMessage(
-                    Component.literal("[MazClient] " + label + " - " + foodLevel + "/20. Time to eat.")
+            client.player.displayClientMessage(
+                    Component.literal("[MazClient] " + label + " - " + foodLevel + "/20. Time to eat."),
+                false
             );
         }
 

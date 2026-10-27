@@ -29,7 +29,7 @@ public class FpsBoosterModule extends Module {
     @Override
     public void toggle() {
         Minecraft client = Minecraft.getInstance();
-        client.gui.setScreen(new FpsBoosterScreen(client.gui.screen));
+        client.gui.setScreen(new FpsBoosterScreen(client.gui.screen()));
     }
 
     public int getEntityDistancePercent() {

@@ -170,7 +170,7 @@ public class MazClient implements ClientModInitializer {
             LastDeathHud.tick(client);
 
             while (openMenuKey.consumeClick()) {
-                client.setScreen(new MazMenuScreen());
+                client.gui.setScreen(new MazMenuScreen());
             }
 
             ParticleFilterState.refresh();
