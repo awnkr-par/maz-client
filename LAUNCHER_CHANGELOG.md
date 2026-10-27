@@ -1,3 +1,10 @@
+## 0.6.78
+
+- Update the bundled MazClient to 1.11.2 with FPS Booster refinements.
+- Use Fabric Loader 0.20.1 for the Minecraft 26.2 and 1.21.11 compatibility paths.
+- Improve Java 25 selection and startup error reporting for mods that require Java 25+.
+- Refuse to publish a release when the current MazClient JAR cannot be compiled; never substitute an older cloud-channel JAR.
+
 ## 0.6.76
 
 - Prevent launcher releases from silently overwriting older version tags when a new release cannot be created.
