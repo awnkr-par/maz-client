@@ -17,7 +17,7 @@ public sealed class LauncherService
     // Bump this whenever the same-version compatibility JAR is rebuilt so existing
     // installations do not keep a stale cached JAR with the same MazClient version.
     private const string CompatibilityMazClientBuildId = "c8a6cdbe72c81b7c5d1ff819297000e72af81c63";
-    public const string FabricLoaderVersion = "0.19.5";
+    public const string FabricLoaderVersion = "0.20.1";
 
     public static IReadOnlyList<string> SupportedMazMinecraftVersions { get; } =
         new[] { MinecraftVersion, CompatibilityMinecraftVersion };
@@ -696,6 +696,15 @@ public sealed class LauncherService
             catch { }
         }
 
+        // Some optional performance mods (notably zfastnoise-ocl) require Java 25.
+        // CmlLib may select a bundled Java 21 runtime for Minecraft 1.21.11;
+        // override it only when a Java 25+ installation can be verified.
+        var java25 = FindJava25Executable();
+        if (java25 != null)
+            process.StartInfo.FileName = java25;
+        else if (string.Equals(version, $"fabric-loader-{FabricLoaderVersion}-{CompatibilityMinecraftVersion}", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("MazClient 1.21.11 performance mods require Java 25+. Install JDK 25 and restart MazLauncher, or disable zfastnoise-ocl.");
+
         process.StartInfo.UseShellExecute = false;
         process.StartInfo.CreateNoWindow = true;
         process.StartInfo.RedirectStandardOutput = true;
@@ -727,6 +736,58 @@ public sealed class LauncherService
                     ? "Minecraft produced no stdout/stderr before exiting."
                     : details));
         }
+    }
+
+    private static string? FindJava25Executable()
+    {
+        var candidates = new List<string>();
+        foreach (var variable in new[] { "JAVA_HOME", "JDK_HOME" })
+        {
+            var home = Environment.GetEnvironmentVariable(variable);
+            if (!string.IsNullOrWhiteSpace(home))
+                candidates.Add(Path.Combine(home, "bin", "javaw.exe"));
+        }
+        foreach (var root in new[] {
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+        })
+        {
+            foreach (var vendor in new[] { "Java", "Eclipse Adoptium", "Microsoft", "Amazon Corretto", "Zulu" })
+            {
+                var directory = Path.Combine(root, vendor);
+                if (!Directory.Exists(directory)) continue;
+                try
+                {
+                    foreach (var jdk in Directory.EnumerateDirectories(directory))
+                        candidates.Add(Path.Combine(jdk, "bin", "javaw.exe"));
+                }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
+            }
+        }
+        foreach (var candidate in candidates.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!File.Exists(candidate)) continue;
+            var java = Path.Combine(Path.GetDirectoryName(candidate)!, "java.exe");
+            try
+            {
+                using var process = new System.Diagnostics.Process();
+                process.StartInfo = new System.Diagnostics.ProcessStartInfo(java, "-version")
+                {
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+                if (!process.Start()) continue;
+                var output = process.StandardError.ReadToEnd();
+                if (!process.WaitForExit(3000)) { process.Kill(); continue; }
+                var match = System.Text.RegularExpressions.Regex.Match(output, @"version ""(?<major>\d+)");
+                if (match.Success && int.TryParse(match.Groups["major"].Value, out var major) && major >= 25)
+                    return candidate;
+            }
+            catch (Exception) { /* Try the next installed JDK. */ }
+        }
+        return null;
     }
 
     private async Task EnsureFabricProfileAsync(string gameDir, string minecraftVersion)

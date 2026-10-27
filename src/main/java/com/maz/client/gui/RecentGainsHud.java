@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -52,7 +52,7 @@ public final class RecentGainsHud {
         refreshCachedWidth(client);
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         resolveModule();
         if (recentGainsModule == null || !recentGainsModule.isEnabled() || client.player == null) return;
@@ -68,13 +68,13 @@ public final class RecentGainsHud {
 
         int textColor = adaptiveTextColor(alpha);
         if (entries.isEmpty()) {
-            graphics.drawString(client.font, EMPTY_TEXT, x + 7, y + 7, textColor, false);
+            graphics.text(client.font, EMPTY_TEXT, x + 7, y + 7, textColor, false);
             return;
         }
 
         int textY = y + 7;
         for (GainEntry entry : entries) {
-            graphics.drawString(client.font, entry.text(), x + 7, textY, textColor, false);
+            graphics.text(client.font, entry.text(), x + 7, textY, textColor, false);
             textY += 10;
         }
     }

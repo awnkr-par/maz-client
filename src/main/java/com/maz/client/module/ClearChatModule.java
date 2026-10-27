@@ -21,6 +21,6 @@ public class ClearChatModule extends Module {
     @Override
     public void runAction() {
         Minecraft client = Minecraft.getInstance();
-        client.gui.getChat().clearMessages(true);
+        client.gui.hud.getChat().clearMessages(true);
     }
 }

@@ -6,7 +6,7 @@ import com.maz.client.module.ModuleCategory;
 import com.maz.client.module.ModuleGroup;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -69,7 +69,7 @@ public class MazMenuScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         graphics.fill(0, 0, this.width, this.height, BG);
 
         int left = (this.width - MENU_WIDTH) / 2;
@@ -81,13 +81,13 @@ public class MazMenuScreen extends Screen {
         graphics.fill(left, top, right, bottom, PANEL);
 
         graphics.fill(left + 16, top + 16, left + 52, top + 52, ACCENT);
-        graphics.drawString(this.font, "M", left + 30, top + 30, 0xFFFFFFFF, true);
-        graphics.drawString(this.font, "MazClient", left + 64, top + 20, TEXT, false);
-        graphics.drawString(this.font, "Performance & client settings", left + 64, top + 37, MUTED, false);
+        graphics.text(this.font, "M", left + 30, top + 30, 0xFFFFFFFF, true);
+        graphics.text(this.font, "MazClient", left + 64, top + 20, TEXT, false);
+        graphics.text(this.font, "Performance & client settings", left + 64, top + 37, MUTED, false);
 
         int hudButtonLeft = right - 112;
         graphics.fill(hudButtonLeft, top + 20, right - 16, top + 48, ACCENT);
-        graphics.drawCenteredString(this.font, "HUD Editor", hudButtonLeft + 48, top + 30, 0xFFFFFFFF);
+        graphics.centeredText(this.font, "HUD Editor", hudButtonLeft + 48, top + 30, 0xFFFFFFFF);
 
         graphics.fill(left, top + 68, right, top + 69, BORDER);
 
@@ -107,14 +107,14 @@ public class MazMenuScreen extends Screen {
                 graphics.fill(left + 10, categoryY, left + 13, categoryY + 26, ACCENT);
             }
 
-            graphics.drawString(this.font, category.getDisplayName(), left + 20, categoryY + 9,
+            graphics.text(this.font, category.getDisplayName(), left + 20, categoryY + 9,
                     selected ? ACCENT : TEXT, false);
             categoryY += 34;
         }
 
         int contentLeft = sidebarRight + 20;
-        graphics.drawString(this.font, selectedCategory.getDisplayName(), contentLeft, top + 86, TEXT, false);
-        graphics.drawString(this.font, "Modules", contentLeft, top + 101, MUTED, false);
+        graphics.text(this.font, selectedCategory.getDisplayName(), contentLeft, top + 86, TEXT, false);
+        graphics.text(this.font, "Modules", contentLeft, top + 101, MUTED, false);
 
         int viewportTop = top + 138;
         int viewportBottom = bottom - 28;
@@ -127,7 +127,7 @@ public class MazMenuScreen extends Screen {
             if (!hasModulesInGroup(group)) continue;
             foundModule = true;
 
-            graphics.drawString(this.font, group.getDisplayName(), contentLeft, moduleY + 2, ACCENT, false);
+            graphics.text(this.font, group.getDisplayName(), contentLeft, moduleY + 2, ACCENT, false);
             moduleY += GROUP_HEADER_HEIGHT;
 
             for (Module module : MazClient.MODULE_MANAGER.getModules()) {
@@ -139,7 +139,7 @@ public class MazMenuScreen extends Screen {
 
                 graphics.fill(contentLeft, moduleY, right - 20, moduleY + 30,
                         hovered ? PANEL_2 : PANEL);
-                graphics.drawString(this.font, module.getName(), contentLeft + 10, moduleY + 11, TEXT, false);
+                graphics.text(this.font, module.getName(), contentLeft + 10, moduleY + 11, TEXT, false);
 
                 int toggleLeft = right - 68;
                 int toggleRight = right - 30;
@@ -155,19 +155,19 @@ public class MazMenuScreen extends Screen {
 
         if (!foundModule) {
             String message = searchText().isBlank() ? "No modules yet." : "No matching modules.";
-            graphics.drawString(this.font, message, contentLeft, moduleY, MUTED, false);
+            graphics.text(this.font, message, contentLeft, moduleY, MUTED, false);
         }
 
         graphics.disableScissor();
         drawScrollbar(graphics, right, viewportTop, viewportBottom);
 
         graphics.fill(left, bottom - 27, right, bottom - 26, BORDER);
-        graphics.drawString(this.font, "MazClient " + MazClient.getVersion(), left + 16, bottom - 17, MUTED, false);
+        graphics.text(this.font, "MazClient " + MazClient.getVersion(), left + 16, bottom - 17, MUTED, false);
 
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
-    private void drawScrollbar(GuiGraphics graphics, int right, int viewportTop, int viewportBottom) {
+    private void drawScrollbar(GuiGraphicsExtractor graphics, int right, int viewportTop, int viewportBottom) {
         int maxScroll = maxScroll();
         if (maxScroll <= 0) return;
 
@@ -215,7 +215,7 @@ public class MazMenuScreen extends Screen {
         int hudButtonLeft = right - 112;
         if (event.x() >= hudButtonLeft && event.x() <= right - 16
                 && event.y() >= top + 20 && event.y() <= top + 48) {
-            Minecraft.getInstance().setScreen(new HudEditorScreen());
+            Minecraft.getInstance().gui.setScreen(new HudEditorScreen());
             return true;
         }
 

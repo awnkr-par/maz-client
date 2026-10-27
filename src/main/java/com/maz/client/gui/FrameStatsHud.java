@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -64,7 +64,7 @@ public final class FrameStatsHud {
 
     private FrameStatsHud() {}
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         if (frameStatsModule == null) frameStatsModule = MazClient.MODULE_MANAGER.getModule("Frame Stats");
         if (frameStatsModule == null || !frameStatsModule.isEnabled()) {
@@ -218,7 +218,7 @@ public final class FrameStatsHud {
         return "Frame: warming up | jitter: -- ms | p50: -- ms | p99: -- ms | p99 gap: -- ms | worst: -- ms | 1% low: -- FPS | stutters: -- (--%) | GC: --";
     }
 
-    private static void drawBox(GuiGraphics graphics, Minecraft client, String text, int accent) {
+    private static void drawBox(GuiGraphicsExtractor graphics, Minecraft client, String text, int accent) {
         int x = LAYOUT.x();
         int y = LAYOUT.y();
         int alpha = LAYOUT.opacity();
@@ -228,7 +228,7 @@ public final class FrameStatsHud {
         }
         graphics.fill(x, y, x + cachedWidth, y + 18, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + 18, withAlpha(accent, alpha));
-        graphics.drawString(client.font, text, x + 7, y + 6, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, text, x + 7, y + 6, adaptiveTextColor(alpha), false);
     }
 
     private static int adaptiveTextColor(int alpha) {

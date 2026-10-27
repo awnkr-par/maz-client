@@ -2,7 +2,7 @@ package com.maz.client.gui;
 
 import com.maz.client.module.Module;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -20,23 +20,23 @@ public class ModuleDetailsScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics g,int mx,int my,float d){
+    public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float d){
         g.fill(0,0,width,height,BG); g.fill(0,0,width,Math.max(110,height/3),BG_TOP);
         int l=(width-W)/2,t=(height-H)/2,r=l+W,b=t+H;
         g.fill(l-1,t-1,r+1,b+1,BORDER); g.fill(l,t,r,b,PANEL);
-        g.fill(l+22,t+20,l+62,t+60,ACCENT); g.drawCenteredString(font,"M",l+42,t+35,0xFFFFFFFF);
-        g.drawString(font,module.getName(),l+76,t+24,TEXT,false);
-        g.drawString(font,module.getCategory().getDisplayName()+" module",l+76,t+43,MUTED,false);
+        g.fill(l+22,t+20,l+62,t+60,ACCENT); g.centeredText(font,"M",l+42,t+35,0xFFFFFFFF);
+        g.text(font,module.getName(),l+76,t+24,TEXT,false);
+        g.text(font,module.getCategory().getDisplayName()+" module",l+76,t+43,MUTED,false);
 
         g.fill(l+22,t+82,r-22,t+140,PANEL2);
         g.fill(l+22,t+82,l+25,t+140,ACCENT);
-        g.drawString(font,"Description",l+34,t+94,MUTED,false);
-        g.drawString(font,trim(module.getDescription(),72),l+34,t+116,TEXT,false);
+        g.text(font,"Description",l+34,t+94,MUTED,false);
+        g.text(font,trim(module.getDescription(),72),l+34,t+116,TEXT,false);
 
         if(module.isAction()){
-            g.fill(l+22,t+158,l+172,t+188,ACCENT); g.drawCenteredString(font,"RUN ACTION",l+97,t+169,0xFFFFFFFF);
+            g.fill(l+22,t+158,l+172,t+188,ACCENT); g.centeredText(font,"RUN ACTION",l+97,t+169,0xFFFFFFFF);
         } else {
-            g.drawString(font,"Enabled",l+22,t+168,TEXT,false);
+            g.text(font,"Enabled",l+22,t+168,TEXT,false);
             int tl=r-92,tr=r-32,tt=t+158,tb=t+186;
             g.fill(tl,tt,tr,tb,module.isEnabled()?SUCCESS:BORDER);
             int knob=module.isEnabled()?tr-24:tl+4;
@@ -46,11 +46,11 @@ public class ModuleDetailsScreen extends Screen {
         if(hasSettings()){
             boolean hover=inside(mx,my,l+188,t+158,r-22,t+188);
             g.fill(l+188,t+158,r-22,t+188,hover?ACCENT:PANEL2);
-            g.drawCenteredString(font,"OPEN SETTINGS",(l+188+r-22)/2,t+169,hover?0xFFFFFFFF:TEXT);
+            g.centeredText(font,"OPEN SETTINGS",(l+188+r-22)/2,t+169,hover?0xFFFFFFFF:TEXT);
         }
         boolean backHover=inside(mx,my,l+22,b-42,r-22,b-14);
-        g.fill(l+22,b-42,r-22,b-14,backHover?ACCENT:PANEL2); g.drawCenteredString(font,"Back",(l+r)/2,b-32,backHover?0xFFFFFFFF:TEXT);
-        super.render(g,mx,my,d);
+        g.fill(l+22,b-42,r-22,b-14,backHover?ACCENT:PANEL2); g.centeredText(font,"Back",(l+r)/2,b-32,backHover?0xFFFFFFFF:TEXT);
+        super.extractRenderState(g,mx,my,d);
     }
 
     @Override
@@ -63,15 +63,15 @@ public class ModuleDetailsScreen extends Screen {
             if(inside(x,y,r-92,t+158,r-32,t+186)){ module.toggle(); return true; }
         }
         if(hasSettings() && inside(x,y,l+188,t+158,r-22,t+188)){
-            Minecraft.getInstance().setScreen(new FpsBoosterScreen(this)); return true;
+            Minecraft.getInstance().gui.setScreen(new FpsBoosterScreen(this)); return true;
         }
-        if(inside(x,y,l+22,b-42,r-22,b-14)){ Minecraft.getInstance().setScreen(parent); return true; }
+        if(inside(x,y,l+22,b-42,r-22,b-14)){ Minecraft.getInstance().gui.setScreen(parent); return true; }
         return super.mouseClicked(e,dc);
     }
 
     private boolean hasSettings(){ return module.getName().equalsIgnoreCase("FPS Booster"); }
     private static String trim(String s,int max){ if(s==null)return ""; return s.length()<=max?s:s.substring(0,max-3)+"..."; }
     private static boolean inside(double x,double y,int l,int t,int r,int b){ return x>=l&&x<=r&&y>=t&&y<=b; }
-    @Override public boolean keyPressed(net.minecraft.client.input.KeyEvent e){ if(e.key()==org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE){ Minecraft.getInstance().setScreen(parent); return true; } return super.keyPressed(e); }
+    @Override public boolean keyPressed(net.minecraft.client.input.KeyEvent e){ if(e.key()==org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE){ Minecraft.getInstance().gui.setScreen(parent); return true; } return super.keyPressed(e); }
     @Override public boolean isPauseScreen(){ return false; }
 }

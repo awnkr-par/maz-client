@@ -6,7 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public final class CompassHud implements ClientModInitializer {
@@ -26,7 +26,7 @@ public final class CompassHud implements ClientModInitializer {
         );
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         if (compassModule == null) compassModule = MazClient.MODULE_MANAGER.getModule("Compass");
         if (compassModule == null || !compassModule.isEnabled() || client.player == null) return;
@@ -50,7 +50,7 @@ public final class CompassHud implements ClientModInitializer {
 
         graphics.fill(x, y, x + width, y + height, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + height, withAlpha(ACCENT, alpha));
-        graphics.drawString(client.font, left, x + 12, y + 8, withAlpha(MUTED, 255), false);
+        graphics.text(client.font, left, x + 12, y + 8, withAlpha(MUTED, 255), false);
 
         String center = direction + "  " + degrees + "°";
         int centerWidth = CENTER_WIDTHS[degrees];
@@ -59,7 +59,7 @@ public final class CompassHud implements ClientModInitializer {
             CENTER_WIDTHS[degrees] = centerWidth;
         }
         int centerX = x + width / 2 - centerWidth / 2;
-        graphics.drawString(client.font, center, centerX, y + 8, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, center, centerX, y + 8, adaptiveTextColor(alpha), false);
 
         int rightWidth = DIRECTION_WIDTHS[rightIndex];
         if (rightWidth == 0) {
@@ -67,7 +67,7 @@ public final class CompassHud implements ClientModInitializer {
             DIRECTION_WIDTHS[rightIndex] = rightWidth;
         }
         int rightX = x + width - 12 - rightWidth;
-        graphics.drawString(client.font, right, rightX, y + 8, withAlpha(MUTED, 255), false);
+        graphics.text(client.font, right, rightX, y + 8, withAlpha(MUTED, 255), false);
     }
 
     private static int directionIndexFor(float yaw) {

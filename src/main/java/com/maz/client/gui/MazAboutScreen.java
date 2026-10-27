@@ -4,7 +4,7 @@ import com.maz.client.MazClient;
 import com.maz.client.module.Module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -33,7 +33,7 @@ public class MazAboutScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         graphics.fill(0, 0, this.width, this.height, BG);
         graphics.fill(0, 0, this.width, Math.max(110, this.height / 3), BG_TOP);
 
@@ -46,9 +46,9 @@ public class MazAboutScreen extends Screen {
         graphics.fill(left, top, right, bottom, PANEL);
 
         graphics.fill(left + 24, top + 24, left + 72, top + 72, ACCENT);
-        graphics.drawCenteredString(this.font, "M", left + 48, top + 42, 0xFFFFFFFF);
-        graphics.drawString(this.font, "MazClient", left + 88, top + 28, TEXT, false);
-        graphics.drawString(this.font, "Client information", left + 88, top + 48, MUTED, false);
+        graphics.centeredText(this.font, "M", left + 48, top + 42, 0xFFFFFFFF);
+        graphics.text(this.font, "MazClient", left + 88, top + 28, TEXT, false);
+        graphics.text(this.font, "Client information", left + 88, top + 48, MUTED, false);
 
         int total = MazClient.MODULE_MANAGER.getModules().size();
         int enabled = 0;
@@ -62,7 +62,7 @@ public class MazAboutScreen extends Screen {
         drawInfoRow(graphics, left + 24, right - 24, infoTop + 68, "Module menu", "Right Shift", false);
         drawInfoRow(graphics, left + 24, right - 24, infoTop + 102, "Platform", "Fabric • Minecraft 1.21.11", false);
 
-        graphics.drawString(this.font, "MazClient keeps your HUD and client controls together in one lightweight menu.",
+        graphics.text(this.font, "MazClient keeps your HUD and client controls together in one lightweight menu.",
                 left + 24, top + 242, MUTED, false);
 
         int backLeft = left + 24;
@@ -70,17 +70,17 @@ public class MazAboutScreen extends Screen {
         int backTop = bottom - 44;
         boolean hovered = inside(mouseX, mouseY, backLeft, backTop, backRight, bottom - 16);
         graphics.fill(backLeft, backTop, backRight, bottom - 16, hovered ? ACCENT_HOVER : ACCENT);
-        graphics.drawCenteredString(this.font, "Back", (backLeft + backRight) / 2, backTop + 10, 0xFFFFFFFF);
+        graphics.centeredText(this.font, "Back", (backLeft + backRight) / 2, backTop + 10, 0xFFFFFFFF);
 
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
-    private void drawInfoRow(GuiGraphics graphics, int left, int right, int top,
+    private void drawInfoRow(GuiGraphicsExtractor graphics, int left, int right, int top,
                              String label, String value, boolean success) {
         graphics.fill(left, top, right, top + 28, PANEL_2);
         graphics.fill(left, top, left + 3, top + 28, success ? SUCCESS : BORDER);
-        graphics.drawString(this.font, label, left + 10, top + 10, MUTED, false);
-        graphics.drawString(this.font, value, right - 180, top + 10, success ? SUCCESS : TEXT, false);
+        graphics.text(this.font, label, left + 10, top + 10, MUTED, false);
+        graphics.text(this.font, value, right - 180, top + 10, success ? SUCCESS : TEXT, false);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MazAboutScreen extends Screen {
         int bottom = top + HEIGHT;
 
         if (inside(event.x(), event.y(), left + 24, bottom - 44, right - 24, bottom - 16)) {
-            Minecraft.getInstance().setScreen(parent);
+            Minecraft.getInstance().gui.setScreen(parent);
             return true;
         }
 
@@ -103,7 +103,7 @@ public class MazAboutScreen extends Screen {
     @Override
     public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
         if (event.key() == org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE) {
-            Minecraft.getInstance().setScreen(parent);
+            Minecraft.getInstance().gui.setScreen(parent);
             return true;
         }
         return super.keyPressed(event);

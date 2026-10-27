@@ -16,6 +16,7 @@ public class FpsBoosterModule extends Module {
 
     private Double previousEntityDistanceScaling;
     private Boolean previousEntityShadows;
+    private Boolean previousVsync;
 
     private int entityDistancePercent = 50;
     private int particleKeepEvery = 16;
@@ -28,7 +29,7 @@ public class FpsBoosterModule extends Module {
     @Override
     public void toggle() {
         Minecraft client = Minecraft.getInstance();
-        client.setScreen(new FpsBoosterScreen(client.screen));
+        client.gui.setScreen(new FpsBoosterScreen(client.gui.screen()));
     }
 
     public int getEntityDistancePercent() {
@@ -77,6 +78,7 @@ public class FpsBoosterModule extends Module {
 
         previousEntityDistanceScaling = client.options.entityDistanceScaling().get();
         previousEntityShadows = client.options.entityShadows().get();
+        previousVsync = client.options.enableVsync().get();
 
         applyProfile();
     }
@@ -92,6 +94,8 @@ public class FpsBoosterModule extends Module {
             client.options.entityShadows().set(previousEntityShadows);
         }
 
+        if (previousVsync != null) client.options.enableVsync().set(previousVsync);
+        previousVsync = null;
         previousEntityDistanceScaling = null;
         previousEntityShadows = null;
     }
@@ -108,6 +112,9 @@ public class FpsBoosterModule extends Module {
 
         client.options.entityDistanceScaling().set(Math.min(baseEntity, entityDistancePercent / 100.0D));
         client.options.entityShadows().set(entityShadows);
+        // VSync can impose a refresh-rate ceiling even with an unlimited FPS setting.
+        // Restore the player's original preference when the booster is disabled.
+        client.options.enableVsync().set(false);
     }
 
     private void settingsChanged() {

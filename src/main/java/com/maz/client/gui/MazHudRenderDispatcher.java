@@ -1,7 +1,7 @@
 package com.maz.client.gui;
 
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
  * Single Fabric HUD entry point for all MazClient overlays.
@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 public final class MazHudRenderDispatcher {
     private MazHudRenderDispatcher() {}
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         MazHud.render(graphics, deltaTracker);
         FrameStatsHud.render(graphics, deltaTracker);
         BiomeHud.render(graphics, deltaTracker);

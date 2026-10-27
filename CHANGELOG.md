@@ -1,3 +1,12 @@
+## 1.11.2
+
+- Require Fabric Loader 0.20.1 for compatibility with the updated 26.2 mod stack; build with non-remapping Fabric Loom for unobfuscated Minecraft.
+- Bundle only the newly compiled MazClient JAR; fail the release rather than silently reuse an older artifact.
+- Clarify that FPS Booster's MAX FPS profile optimizes entity distance, particles and entity shadows without setting an artificial 240 FPS ceiling.
+- Disable VSync while FPS Booster is enabled and restore the previous VSync preference when disabled, removing a possible display-refresh ceiling.
+- Show Minecraft's current FPS limit and VSync state in the FPS Booster interface.
+- The goal is higher real-world FPS in singleplayer and multiplayer; results depend on hardware and rendering workload.
+
 ## 1.11.1
 
 ### FPS and HUD allocation improvements

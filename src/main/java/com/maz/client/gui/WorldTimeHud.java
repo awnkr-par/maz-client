@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public final class WorldTimeHud {
     private static final int BACKGROUND = 0xFFFFFFFF;
@@ -32,7 +32,7 @@ public final class WorldTimeHud {
         resolveModule();
         if (worldTimeModule == null || !worldTimeModule.isEnabled() || client.level == null) return;
 
-        long dayTime = client.level.getDayTime();
+        long dayTime = client.level.getGameTime();
         long elapsedDays = Math.floorDiv(dayTime, 24000L);
         long day = elapsedDays + 1L;
         long tickOfDay = Math.floorMod(dayTime, 24000L);
@@ -48,7 +48,7 @@ public final class WorldTimeHud {
         }
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         resolveModule();
         if (worldTimeModule == null || !worldTimeModule.isEnabled() || client.level == null) return;
@@ -58,7 +58,7 @@ public final class WorldTimeHud {
         int alpha = LAYOUT.opacity();
         graphics.fill(x, y, x + timeWidth, y + 18, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + 18, withAlpha(ACCENT, alpha));
-        graphics.drawString(client.font, timeText, x + 7, y + 6, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, timeText, x + 7, y + 6, adaptiveTextColor(alpha), false);
     }
 
     private static void resolveModule() {

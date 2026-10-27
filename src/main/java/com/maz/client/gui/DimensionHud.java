@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.Locale;
 
@@ -30,7 +30,7 @@ public final class DimensionHud {
         }
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         resolveModule();
         if (dimensionModule == null || !dimensionModule.isEnabled() || client.level == null) return;
@@ -40,7 +40,7 @@ public final class DimensionHud {
         int alpha = LAYOUT.opacity();
         graphics.fill(x, y, x + dimensionWidth, y + 18, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + 18, withAlpha(ACCENT, alpha));
-        graphics.drawString(client.font, dimensionText, x + 7, y + 6, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, dimensionText, x + 7, y + 6, adaptiveTextColor(alpha), false);
     }
 
     private static void resolveModule() {

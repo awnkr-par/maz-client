@@ -37,12 +37,13 @@ import com.maz.client.module.SpeedModule;
 import com.maz.client.module.ToggleSneakModule;
 import com.maz.client.module.ToggleSprintModule;
 import com.maz.client.module.ZoomModule;
+import com.maz.client.performance.ParticleFilterState;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -136,7 +137,7 @@ public class MazClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath(MOD_ID, "maz_client")
         );
 
-        openMenuKey = KeyBindingHelper.registerKeyBinding(
+        openMenuKey = KeyMappingHelper.registerKeyMapping(
                 new KeyMapping(
                         "key.maz-client.open_menu",
                         InputConstants.Type.KEYSYM,
@@ -169,9 +170,10 @@ public class MazClient implements ClientModInitializer {
             LastDeathHud.tick(client);
 
             while (openMenuKey.consumeClick()) {
-                client.setScreen(new MazMenuScreen());
+                client.gui.setScreen(new MazMenuScreen());
             }
 
+            ParticleFilterState.refresh();
             ModuleHotkeys.tick();
             MODULE_MANAGER.tick();
         });
