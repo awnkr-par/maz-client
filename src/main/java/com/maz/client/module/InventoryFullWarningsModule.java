@@ -54,9 +54,8 @@ public final class InventoryFullWarningsModule extends Module {
         }
 
         if (full && !wasFull) {
-            client.player.displayClientMessage(
-                    Component.literal("[MazClient] Inventory full — all " + slotCount + " main slots are occupied."),
-                false
+            client.gui.hud.getChat().addClientSystemMessage(
+                    Component.literal("[MazClient] Inventory full — all " + slotCount + " main slots are occupied.")
             );
         }
         wasFull = full;

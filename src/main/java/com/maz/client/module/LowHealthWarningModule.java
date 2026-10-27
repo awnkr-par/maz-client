@@ -45,12 +45,11 @@ public final class LowHealthWarningModule extends Module {
         if (severity.ordinal() > lastSeverity.ordinal()) {
             int percent = Math.round(fraction * 100.0F);
             String label = severity == Severity.CRITICAL ? "Critical health" : "Low health";
-            client.player.displayClientMessage(
+            client.gui.hud.getChat().addClientSystemMessage(
                     Component.literal("[MazClient] " + label + " - "
                             + Math.round(health * 10.0F) / 10.0F + "/"
                             + Math.round(maxHealth * 10.0F) / 10.0F
-                            + " (" + percent + "%)."),
-                false
+                            + " (" + percent + "%).")
             );
         }
 

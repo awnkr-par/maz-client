@@ -64,7 +64,7 @@ public final class DurabilityWarningsModule extends Module {
             String message = "[MazClient] " + level + " durability: " + slotLabel + " — "
                     + stack.getHoverName().getString() + " " + remaining + "/" + stack.getMaxDamage()
                     + " (" + percent + "%)";
-            client.player.displayClientMessage(Component.literal(message), false);
+            client.gui.hud.getChat().addClientSystemMessage(Component.literal(message));
         }
         return severity;
     }
