@@ -1,3 +1,9 @@
+## 0.6.79
+
+- Publish the updated Windows launcher with Fabric Loader 0.20.1 for Sodium Extra compatibility.
+- Include Java 25 runtime selection for Fast Noise Ocl Integration on Minecraft 1.21.11.
+- Refresh the cloud update payload and launcher version for existing installations.
+
 ## 0.6.78
 
 - Update the bundled MazClient to 1.11.2 with FPS Booster refinements.
