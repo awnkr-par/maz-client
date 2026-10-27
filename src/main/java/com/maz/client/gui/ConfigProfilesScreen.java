@@ -2,7 +2,7 @@ package com.maz.client.gui;
 
 import com.maz.client.config.ConfigBundle;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ public class ConfigProfilesScreen extends Screen {
         this.parent=parent;
     }
 
-    @Override public void render(GuiGraphics g,int mx,int my,float d){
+    @Override public void extractRenderState(GuiGraphicsExtractor g,int mx,int my,float d){
         g.fill(0,0,width,height,BG);
         int l=(width-W)/2,t=(height-H)/2,r=l+W,b=t+H;
         g.fill(l-1,t-1,r+1,b+1,BORDER); g.fill(l,t,r,b,PANEL);
@@ -41,10 +41,10 @@ public class ConfigProfilesScreen extends Screen {
 
         if(!status.isEmpty()) g.drawString(font,trim(status,66),l+22,b-48,MUTED,false);
         button(g,mx,my,l+22,b-36,r-22,b-12,"BACK",ACCENT);
-        super.render(g,mx,my,d);
+        super.extractRenderState(g,mx,my,d);
     }
 
-    private void button(GuiGraphics g,int mx,int my,int l,int t,int r,int b,String label,int color){
+    private void button(GuiGraphicsExtractor g,int mx,int my,int l,int t,int r,int b,String label,int color){
         boolean hover=inside(mx,my,l,t,r,b);
         g.fill(l,t,r,b,hover?0xFF6875FF:color);
         g.drawCenteredString(font,label,(l+r)/2,t+9,0xFFFFFFFF);
@@ -67,7 +67,7 @@ public class ConfigProfilesScreen extends Screen {
             }
             y+=58;
         }
-        if(inside(e.x(),e.y(),l+22,b-36,r-22,b-12)){Minecraft.getInstance().setScreen(parent);return true;}
+        if(inside(e.x(),e.y(),l+22,b-36,r-22,b-12)){Minecraft.getInstance().gui.setScreen(parent);return true;}
         return super.mouseClicked(e,dc);
     }
 
@@ -76,7 +76,7 @@ public class ConfigProfilesScreen extends Screen {
     }
 
     @Override public boolean keyPressed(net.minecraft.client.input.KeyEvent e){
-        if(e.key()==org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE){Minecraft.getInstance().setScreen(parent);return true;}
+        if(e.key()==org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE){Minecraft.getInstance().gui.setScreen(parent);return true;}
         return super.keyPressed(e);
     }
 

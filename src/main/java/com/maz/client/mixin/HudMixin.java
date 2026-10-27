@@ -3,7 +3,7 @@ package com.maz.client.mixin;
 import com.maz.client.MazClient;
 import com.maz.client.module.Module;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.world.scores.Objective;
 
@@ -17,11 +17,11 @@ public abstract class HudMixin {
     private static Module maz$hideScoreboardModule;
 
     @Inject(
-            method = "displayScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/scores/Objective;)V",
+            method = "displayScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/scores/Objective;)V",
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true, require = 0
     )
-    private void maz$hideScoreboard(GuiGraphics graphics, Objective objective, CallbackInfo ci) {
+    private void maz$hideScoreboard(GuiGraphicsExtractor graphics, Objective objective, CallbackInfo ci) {
         Module module = maz$hideScoreboardModule;
         if (module == null) {
             module = MazClient.MODULE_MANAGER.getModule("Hide Scoreboard");
