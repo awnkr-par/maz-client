@@ -4,7 +4,7 @@ import com.maz.client.MazClient;
 import com.maz.client.module.Module;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -33,7 +33,7 @@ public class MazAboutScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         graphics.fill(0, 0, this.width, this.height, BG);
         graphics.fill(0, 0, this.width, Math.max(110, this.height / 3), BG_TOP);
 
@@ -72,10 +72,10 @@ public class MazAboutScreen extends Screen {
         graphics.fill(backLeft, backTop, backRight, bottom - 16, hovered ? ACCENT_HOVER : ACCENT);
         graphics.drawCenteredString(this.font, "Back", (backLeft + backRight) / 2, backTop + 10, 0xFFFFFFFF);
 
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
-    private void drawInfoRow(GuiGraphics graphics, int left, int right, int top,
+    private void drawInfoRow(GuiGraphicsExtractor graphics, int left, int right, int top,
                              String label, String value, boolean success) {
         graphics.fill(left, top, right, top + 28, PANEL_2);
         graphics.fill(left, top, left + 3, top + 28, success ? SUCCESS : BORDER);
@@ -93,7 +93,7 @@ public class MazAboutScreen extends Screen {
         int bottom = top + HEIGHT;
 
         if (inside(event.x(), event.y(), left + 24, bottom - 44, right - 24, bottom - 16)) {
-            Minecraft.getInstance().setScreen(parent);
+            Minecraft.getInstance().gui.setScreen(parent);
             return true;
         }
 
@@ -103,7 +103,7 @@ public class MazAboutScreen extends Screen {
     @Override
     public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
         if (event.key() == org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE) {
-            Minecraft.getInstance().setScreen(parent);
+            Minecraft.getInstance().gui.setScreen(parent);
             return true;
         }
         return super.keyPressed(event);

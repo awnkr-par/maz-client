@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,7 +49,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
         return className.startsWith("net.minecraft.client.gui.screens.");
     }
 
-    private static void renderMazBackground(Screen screen, GuiGraphics graphics,
+    private static void renderMazBackground(Screen screen, GuiGraphicsExtractor graphics,
                                             int mouseX, int mouseY, float tickProgress) {
         Minecraft client = Minecraft.getInstance();
         int width = client.getWindow().getGuiScaledWidth();
@@ -59,7 +59,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
         graphics.fill(0, 0, width, Math.max(110, height / 3), BG_TOP);
     }
 
-    private static void renderMazWidgets(Screen screen, GuiGraphics graphics,
+    private static void renderMazWidgets(Screen screen, GuiGraphicsExtractor graphics,
                                          int mouseX, int mouseY, float tickProgress) {
         for (AbstractWidget widget : Screens.getButtons(screen)) {
             if (!widget.visible) continue;
@@ -83,7 +83,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
         return widget.getWidth() <= 40 && widget.getHeight() <= 40;
     }
 
-    private static void renderUtilityIconFrame(GuiGraphics graphics, AbstractWidget widget,
+    private static void renderUtilityIconFrame(GuiGraphicsExtractor graphics, AbstractWidget widget,
                                                int mouseX, int mouseY) {
         int left = widget.getX() - 1;
         int top = widget.getY() - 1;
@@ -98,7 +98,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
         graphics.fill(right - 1, top, right, bottom, border);
     }
 
-    private static void renderMazButton(GuiGraphics graphics, AbstractWidget widget,
+    private static void renderMazButton(GuiGraphicsExtractor graphics, AbstractWidget widget,
                                         int mouseX, int mouseY) {
         int left = widget.getX();
         int top = widget.getY();

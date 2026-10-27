@@ -6,7 +6,7 @@ import com.maz.client.module.ModuleCategory;
 import com.maz.client.module.ModuleGroup;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -69,7 +69,7 @@ public class MazMenuScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         graphics.fill(0, 0, this.width, this.height, BG);
 
         int left = (this.width - MENU_WIDTH) / 2;
@@ -164,10 +164,10 @@ public class MazMenuScreen extends Screen {
         graphics.fill(left, bottom - 27, right, bottom - 26, BORDER);
         graphics.drawString(this.font, "MazClient " + MazClient.getVersion(), left + 16, bottom - 17, MUTED, false);
 
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
-    private void drawScrollbar(GuiGraphics graphics, int right, int viewportTop, int viewportBottom) {
+    private void drawScrollbar(GuiGraphicsExtractor graphics, int right, int viewportTop, int viewportBottom) {
         int maxScroll = maxScroll();
         if (maxScroll <= 0) return;
 
@@ -215,7 +215,7 @@ public class MazMenuScreen extends Screen {
         int hudButtonLeft = right - 112;
         if (event.x() >= hudButtonLeft && event.x() <= right - 16
                 && event.y() >= top + 20 && event.y() <= top + 48) {
-            Minecraft.getInstance().setScreen(new HudEditorScreen());
+            Minecraft.getInstance().gui.setScreen(new HudEditorScreen());
             return true;
         }
 

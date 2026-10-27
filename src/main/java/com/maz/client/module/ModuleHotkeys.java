@@ -1,7 +1,7 @@
 package com.maz.client.module;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
@@ -25,7 +25,7 @@ public final class ModuleHotkeys {
                     ? GLFW.GLFW_KEY_C
                     : GLFW.GLFW_KEY_UNKNOWN;
 
-            KeyMapping mapping = KeyBindingHelper.registerKeyBinding(
+            KeyMapping mapping = KeyMappingHelper.registerKeyMapping(
                     new KeyMapping(
                             "key.maz-client.module." + id,
                             InputConstants.Type.KEYSYM,

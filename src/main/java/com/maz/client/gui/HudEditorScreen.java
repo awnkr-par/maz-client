@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 import com.maz.client.module.ModuleCategory;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -35,7 +35,7 @@ public class HudEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         graphics.fill(0, 0, this.width, this.height, BG);
         graphics.fill(0, 0, this.width, 42, BG_TOP);
 
@@ -74,10 +74,10 @@ public class HudEditorScreen extends Screen {
         graphics.drawCenteredString(this.font, "Reset", resetLeft + 35, 16, 0xFFFFFFFF);
 
         drawOpacityControl(graphics, mouseX, mouseY);
-        super.render(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
-    private void drawOpacityControl(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void drawOpacityControl(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int panelTop = this.height - 38;
         graphics.fill(0, panelTop, this.width, this.height, PANEL);
         graphics.fill(0, panelTop, this.width, panelTop + 1, BORDER);
