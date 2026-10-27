@@ -700,6 +700,8 @@ public sealed class LauncherService
         // CmlLib may select a bundled Java 21 runtime for Minecraft 1.21.11;
         // override it only when a Java 25+ installation can be verified.
         var java25 = FindJava25Executable();
+        if (java25 == null)
+            java25 = await InstallJava25RuntimeAsync();
         if (java25 != null)
             process.StartInfo.FileName = java25;
         else if (string.Equals(version, $"fabric-loader-{FabricLoaderVersion}-{CompatibilityMinecraftVersion}", StringComparison.OrdinalIgnoreCase))
@@ -735,6 +737,49 @@ public sealed class LauncherService
                 (string.IsNullOrWhiteSpace(details)
                     ? "Minecraft produced no stdout/stderr before exiting."
                     : details));
+        }
+    }
+
+    private static async Task<string?> InstallJava25RuntimeAsync()
+    {
+        // Use a private runtime: no administrator privileges or global JAVA_HOME changes.
+        var runtimeRoot = Path.Combine(DataRoot, "runtime", "jdk-25");
+        var javaw = Path.Combine(runtimeRoot, "bin", "javaw.exe");
+        if (File.Exists(javaw)) return javaw;
+
+        var archive = Path.Combine(Path.GetTempPath(), "mazlauncher-jdk25-" + Guid.NewGuid().ToString("N") + ".zip");
+        var staging = runtimeRoot + ".install-" + Guid.NewGuid().ToString("N");
+        try
+        {
+            Directory.CreateDirectory(staging);
+            using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("MazLauncher/0.6.80");
+            using var response = await client.GetAsync(
+                "https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jdk/hotspot/normal/eclipse",
+                HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            await using (var source = await response.Content.ReadAsStreamAsync())
+            await using (var target = File.Create(archive))
+                await source.CopyToAsync(target);
+
+            System.IO.Compression.ZipFile.ExtractToDirectory(archive, staging);
+            var extracted = Directory.EnumerateFiles(staging, "javaw.exe", SearchOption.AllDirectories)
+                .FirstOrDefault(p => string.Equals(Path.GetFileName(Path.GetDirectoryName(p)), "bin", StringComparison.OrdinalIgnoreCase));
+            if (extracted == null) throw new InvalidDataException("Downloaded JDK 25 has no javaw.exe.");
+            var home = Directory.GetParent(Path.GetDirectoryName(extracted)!)!.FullName;
+            Directory.CreateDirectory(Path.GetDirectoryName(runtimeRoot)!);
+            if (!Directory.Exists(runtimeRoot)) Directory.Move(home, runtimeRoot);
+            if (!File.Exists(javaw)) throw new InvalidDataException("JDK 25 installation was incomplete.");
+            return javaw;
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Could not install the required Java 25 runtime automatically. Check your internet connection or install JDK 25 manually. " + ex.Message, ex);
+        }
+        finally
+        {
+            try { if (File.Exists(archive)) File.Delete(archive); } catch (IOException) { }
+            try { if (Directory.Exists(staging)) Directory.Delete(staging, true); } catch (IOException) { }
         }
     }
 
