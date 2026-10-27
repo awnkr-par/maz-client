@@ -68,13 +68,13 @@ public final class RecentGainsHud {
 
         int textColor = adaptiveTextColor(alpha);
         if (entries.isEmpty()) {
-            graphics.drawString(client.font, EMPTY_TEXT, x + 7, y + 7, textColor, false);
+            graphics.text(client.font, EMPTY_TEXT, x + 7, y + 7, textColor, false);
             return;
         }
 
         int textY = y + 7;
         for (GainEntry entry : entries) {
-            graphics.drawString(client.font, entry.text(), x + 7, textY, textColor, false);
+            graphics.text(client.font, entry.text(), x + 7, textY, textColor, false);
             textY += 10;
         }
     }
