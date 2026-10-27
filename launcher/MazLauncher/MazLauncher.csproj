@@ -8,9 +8,9 @@
     <AssemblyName>MazLauncher</AssemblyName>
     <RootNamespace>MazLauncher</RootNamespace>
     <ApplicationIcon>Assets\MazLauncher.ico</ApplicationIcon>
-    <Version>0.6.79</Version>
-    <AssemblyVersion>0.6.79.0</AssemblyVersion>
-    <FileVersion>0.6.79.0</FileVersion>
+    <Version>0.6.80</Version>
+    <AssemblyVersion>0.6.80.0</AssemblyVersion>
+    <FileVersion>0.6.80.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
