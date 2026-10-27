@@ -1,5 +1,5 @@
 #define MyAppName "MazLauncher"
-#define MyAppVersion "0.6.68"
+#define MyAppVersion "0.6.78"
 #define MyAppPublisher "MazClient"
 #define MyAppExeName "MazLauncher.exe"
 #define MyAppId "{8F27A55B-3B16-4A08-A56D-6E90D8596944}"
