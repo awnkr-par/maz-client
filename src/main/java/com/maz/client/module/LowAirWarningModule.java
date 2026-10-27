@@ -45,7 +45,7 @@ public final class LowAirWarningModule extends Module {
         if (severity.ordinal() > lastSeverity.ordinal()) {
             int secondsRemaining = Math.max(0, (air + 19) / 20);
             String label = severity == Severity.CRITICAL ? "Critical air" : "Low air";
-            client.gui.getChat().addMessage(
+            client.gui.hud.getChat().addMessage(
                     Component.literal("[MazClient] " + label + " - about "
                             + secondsRemaining + "s remaining.")
             );
