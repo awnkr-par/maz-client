@@ -22,24 +22,24 @@ public class ConfigProfilesScreen extends Screen {
         g.fill(0,0,width,height,BG);
         int l=(width-W)/2,t=(height-H)/2,r=l+W,b=t+H;
         g.fill(l-1,t-1,r+1,b+1,BORDER); g.fill(l,t,r,b,PANEL);
-        g.fill(l+16,t+16,l+52,t+52,ACCENT); g.drawString(font,"M",l+30,t+30,0xFFFFFFFF,true);
-        g.drawString(font,"Quick Config Profiles",l+64,t+20,TEXT,false);
-        g.drawString(font,"Minecraft options + Maz modules + HUD layout.",l+64,t+37,MUTED,false);
+        g.fill(l+16,t+16,l+52,t+52,ACCENT); g.text(font,"M",l+30,t+30,0xFFFFFFFF,true);
+        g.text(font,"Quick Config Profiles",l+64,t+20,TEXT,false);
+        g.text(font,"Minecraft options + Maz modules + HUD layout.",l+64,t+37,MUTED,false);
         g.fill(l,t+66,r,t+67,BORDER);
 
         int y=t+82;
         for(int slot=1;slot<=3;slot++){
             boolean exists=ConfigBundle.profileExists(slot);
             g.fill(l+22,y,r-22,y+48,PANEL2);
-            g.drawString(font,"Profile "+slot,l+34,y+10,TEXT,false);
-            g.drawString(font,exists?"SAVED":"EMPTY",l+34,y+28,exists?SUCCESS:MUTED,false);
+            g.text(font,"Profile "+slot,l+34,y+10,TEXT,false);
+            g.text(font,exists?"SAVED":"EMPTY",l+34,y+28,exists?SUCCESS:MUTED,false);
             button(g,mx,my,r-226,y+11,r-166,y+37,"SAVE",ACCENT);
             button(g,mx,my,r-158,y+11,r-98,y+37,"LOAD",exists?SUCCESS:BORDER);
             button(g,mx,my,r-90,y+11,r-30,y+37,"DELETE",exists?DANGER:BORDER);
             y+=58;
         }
 
-        if(!status.isEmpty()) g.drawString(font,trim(status,66),l+22,b-48,MUTED,false);
+        if(!status.isEmpty()) g.text(font,trim(status,66),l+22,b-48,MUTED,false);
         button(g,mx,my,l+22,b-36,r-22,b-12,"BACK",ACCENT);
         super.extractRenderState(g,mx,my,d);
     }
@@ -47,7 +47,7 @@ public class ConfigProfilesScreen extends Screen {
     private void button(GuiGraphicsExtractor g,int mx,int my,int l,int t,int r,int b,String label,int color){
         boolean hover=inside(mx,my,l,t,r,b);
         g.fill(l,t,r,b,hover?0xFF6875FF:color);
-        g.drawCenteredString(font,label,(l+r)/2,t+9,0xFFFFFFFF);
+        g.centeredText(font,label,(l+r)/2,t+9,0xFFFFFFFF);
     }
 
     @Override public boolean mouseClicked(MouseButtonEvent e,boolean dc){

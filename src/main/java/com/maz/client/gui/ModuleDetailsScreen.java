@@ -24,19 +24,19 @@ public class ModuleDetailsScreen extends Screen {
         g.fill(0,0,width,height,BG); g.fill(0,0,width,Math.max(110,height/3),BG_TOP);
         int l=(width-W)/2,t=(height-H)/2,r=l+W,b=t+H;
         g.fill(l-1,t-1,r+1,b+1,BORDER); g.fill(l,t,r,b,PANEL);
-        g.fill(l+22,t+20,l+62,t+60,ACCENT); g.drawCenteredString(font,"M",l+42,t+35,0xFFFFFFFF);
-        g.drawString(font,module.getName(),l+76,t+24,TEXT,false);
-        g.drawString(font,module.getCategory().getDisplayName()+" module",l+76,t+43,MUTED,false);
+        g.fill(l+22,t+20,l+62,t+60,ACCENT); g.centeredText(font,"M",l+42,t+35,0xFFFFFFFF);
+        g.text(font,module.getName(),l+76,t+24,TEXT,false);
+        g.text(font,module.getCategory().getDisplayName()+" module",l+76,t+43,MUTED,false);
 
         g.fill(l+22,t+82,r-22,t+140,PANEL2);
         g.fill(l+22,t+82,l+25,t+140,ACCENT);
-        g.drawString(font,"Description",l+34,t+94,MUTED,false);
-        g.drawString(font,trim(module.getDescription(),72),l+34,t+116,TEXT,false);
+        g.text(font,"Description",l+34,t+94,MUTED,false);
+        g.text(font,trim(module.getDescription(),72),l+34,t+116,TEXT,false);
 
         if(module.isAction()){
-            g.fill(l+22,t+158,l+172,t+188,ACCENT); g.drawCenteredString(font,"RUN ACTION",l+97,t+169,0xFFFFFFFF);
+            g.fill(l+22,t+158,l+172,t+188,ACCENT); g.centeredText(font,"RUN ACTION",l+97,t+169,0xFFFFFFFF);
         } else {
-            g.drawString(font,"Enabled",l+22,t+168,TEXT,false);
+            g.text(font,"Enabled",l+22,t+168,TEXT,false);
             int tl=r-92,tr=r-32,tt=t+158,tb=t+186;
             g.fill(tl,tt,tr,tb,module.isEnabled()?SUCCESS:BORDER);
             int knob=module.isEnabled()?tr-24:tl+4;
@@ -46,10 +46,10 @@ public class ModuleDetailsScreen extends Screen {
         if(hasSettings()){
             boolean hover=inside(mx,my,l+188,t+158,r-22,t+188);
             g.fill(l+188,t+158,r-22,t+188,hover?ACCENT:PANEL2);
-            g.drawCenteredString(font,"OPEN SETTINGS",(l+188+r-22)/2,t+169,hover?0xFFFFFFFF:TEXT);
+            g.centeredText(font,"OPEN SETTINGS",(l+188+r-22)/2,t+169,hover?0xFFFFFFFF:TEXT);
         }
         boolean backHover=inside(mx,my,l+22,b-42,r-22,b-14);
-        g.fill(l+22,b-42,r-22,b-14,backHover?ACCENT:PANEL2); g.drawCenteredString(font,"Back",(l+r)/2,b-32,backHover?0xFFFFFFFF:TEXT);
+        g.fill(l+22,b-42,r-22,b-14,backHover?ACCENT:PANEL2); g.centeredText(font,"Back",(l+r)/2,b-32,backHover?0xFFFFFFFF:TEXT);
         super.extractRenderState(g,mx,my,d);
     }
 

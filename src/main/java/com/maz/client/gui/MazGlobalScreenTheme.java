@@ -29,7 +29,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
             if (!shouldTheme(screen)) return;
 
             ScreenEvents.afterBackground(screen).register(MazGlobalScreenTheme::renderMazBackground);
-            ScreenEvents.afterRender(screen).register(MazGlobalScreenTheme::renderMazWidgets);
+            ScreenEvents.afterExtract(screen).register(MazGlobalScreenTheme::renderMazWidgets);
         });
     }
 
@@ -61,7 +61,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
 
     private static void renderMazWidgets(Screen screen, GuiGraphicsExtractor graphics,
                                          int mouseX, int mouseY, float tickProgress) {
-        for (AbstractWidget widget : Screens.getButtons(screen)) {
+        for (AbstractWidget widget : Screens.getWidgets(screen)) {
             if (!widget.visible) continue;
 
             if (widget instanceof AbstractButton) {
@@ -117,7 +117,7 @@ public final class MazGlobalScreenTheme implements ClientModInitializer {
         graphics.fill(right - 1, top, right, bottom, border);
 
         Minecraft client = Minecraft.getInstance();
-        graphics.drawCenteredString(
+        graphics.centeredText(
                 client.font,
                 widget.getMessage().getString(),
                 (left + right) / 2,

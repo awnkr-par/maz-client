@@ -64,14 +64,14 @@ public class HudEditorScreen extends Screen {
 
         graphics.fill(0, 41, this.width, 42, BORDER);
         graphics.fill(10, 8, 36, 34, ACCENT);
-        graphics.drawCenteredString(this.font, "M", 23, 17, 0xFFFFFFFF);
-        graphics.drawString(this.font, "MazClient HUD Editor", 46, 9, TEXT, false);
-        graphics.drawString(this.font, "Drag modules • click one to edit opacity • ESC saves", 46, 24, MUTED, false);
+        graphics.centeredText(this.font, "M", 23, 17, 0xFFFFFFFF);
+        graphics.text(this.font, "MazClient HUD Editor", 46, 9, TEXT, false);
+        graphics.text(this.font, "Drag modules • click one to edit opacity • ESC saves", 46, 24, MUTED, false);
 
         int resetLeft = this.width - 80;
         boolean resetHover = mouseX >= resetLeft && mouseX <= this.width - 10 && mouseY >= 8 && mouseY <= 32;
         graphics.fill(resetLeft, 8, this.width - 10, 32, resetHover ? ACCENT_HOVER : ACCENT);
-        graphics.drawCenteredString(this.font, "Reset", resetLeft + 35, 16, 0xFFFFFFFF);
+        graphics.centeredText(this.font, "Reset", resetLeft + 35, 16, 0xFFFFFFFF);
 
         drawOpacityControl(graphics, mouseX, mouseY);
         super.extractRenderState(graphics, mouseX, mouseY, delta);
@@ -83,7 +83,7 @@ public class HudEditorScreen extends Screen {
         graphics.fill(0, panelTop, this.width, panelTop + 1, BORDER);
 
         if (selectedModule == null) {
-            graphics.drawCenteredString(this.font, "Select a HUD element to change opacity or position", this.width / 2, panelTop + 15, MUTED);
+            graphics.centeredText(this.font, "Select a HUD element to change opacity or position", this.width / 2, panelTop + 15, MUTED);
             return;
         }
 
@@ -93,7 +93,7 @@ public class HudEditorScreen extends Screen {
         int sliderRight = Math.max(sliderLeft + 60, this.width - 160);
         int sliderY = panelTop + 18;
 
-        graphics.drawString(this.font, selectedModule + "  " + percent + "%", 12, panelTop + 14, TEXT, false);
+        graphics.text(this.font, selectedModule + "  " + percent + "%", 12, panelTop + 14, TEXT, false);
         graphics.fill(sliderLeft, sliderY, sliderRight, sliderY + 4, PANEL_2);
 
         int knobX = sliderLeft + Math.round((alpha / 255.0F) * (sliderRight - sliderLeft));
@@ -106,10 +106,10 @@ public class HudEditorScreen extends Screen {
         boolean opacityHover = mouseX >= opacityResetLeft && mouseX <= opacityResetLeft + 60 && mouseY >= panelTop + 8 && mouseY <= panelTop + 30;
         graphics.fill(centerLeft, panelTop + 8, centerLeft + 60, panelTop + 30, centerHover ? ACCENT : PANEL_2);
         graphics.fill(centerLeft, panelTop + 8, centerLeft + 60, panelTop + 9, centerHover ? ACCENT : BORDER);
-        graphics.drawCenteredString(this.font, "Center", centerLeft + 30, panelTop + 15, centerHover ? 0xFFFFFFFF : TEXT);
+        graphics.centeredText(this.font, "Center", centerLeft + 30, panelTop + 15, centerHover ? 0xFFFFFFFF : TEXT);
         graphics.fill(opacityResetLeft, panelTop + 8, opacityResetLeft + 60, panelTop + 30, opacityHover ? ACCENT : PANEL_2);
         graphics.fill(opacityResetLeft, panelTop + 8, opacityResetLeft + 60, panelTop + 9, opacityHover ? ACCENT : BORDER);
-        graphics.drawCenteredString(this.font, "100%", opacityResetLeft + 30, panelTop + 15, opacityHover ? 0xFFFFFFFF : TEXT);
+        graphics.centeredText(this.font, "100%", opacityResetLeft + 30, panelTop + 15, opacityHover ? 0xFFFFFFFF : TEXT);
     }
 
     @Override
