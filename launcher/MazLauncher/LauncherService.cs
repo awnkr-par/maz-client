@@ -781,7 +781,7 @@ public sealed class LauncherService
                 if (!process.Start()) continue;
                 var output = process.StandardError.ReadToEnd();
                 if (!process.WaitForExit(3000)) { process.Kill(); continue; }
-                var match = System.Text.RegularExpressions.Regex.Match(output, "version \\"(?<major>\\d+)");
+                var match = System.Text.RegularExpressions.Regex.Match(output, @"version ""(?<major>\d+)");
                 if (match.Success && int.TryParse(match.Groups["major"].Value, out var major) && major >= 25)
                     return candidate;
             }
