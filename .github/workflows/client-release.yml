@@ -44,10 +44,7 @@ jobs:
         shell: pwsh
         run: |
           gradle clean build --stacktrace
-          if ($LASTEXITCODE -ne 0) {
-            Write-Warning 'Minecraft mappings/build unavailable; release will reuse the last verified cloud-channel MazClient JAR.'
-            exit 0
-          }
+          if ($LASTEXITCODE -ne 0) { throw 'MazClient compilation failed; refusing to release an old JAR.' }
 
       - name: Set up .NET 8
         uses: actions/setup-dotnet@v4
@@ -88,14 +85,7 @@ jobs:
           if (-not $modVersionLine) { throw 'mod_version was not found.' }
           $clientVersion = ($modVersionLine.Line -split '=', 2)[1].Trim()
           $jar = "build/libs/maz-client-$clientVersion.jar"
-          if (-not (Test-Path $jar)) {
-            New-Item -ItemType Directory -Force -Path (Split-Path $jar) | Out-Null
-            $fallbackDir = Split-Path $jar
-            gh release download cloud --pattern maz-client.jar --dir $fallbackDir --clobber
-            if ($LASTEXITCODE -ne 0 -or -not (Test-Path (Join-Path $fallbackDir 'maz-client.jar'))) { throw 'Fallback MazClient JAR download failed.' }
-            Move-Item (Join-Path $fallbackDir 'maz-client.jar') $jar -Force
-            if ((Get-Item $jar).Length -lt 1024) { throw 'Fallback MazClient JAR download was empty.' }
-          }
+          if (-not (Test-Path $jar)) { throw 'Fresh MazClient JAR missing; refusing to release a stale JAR.' }
           Copy-Item $jar launcher/publish/payload/maz-client.jar -Force
 
           # Bundle the full requested Fabric mod stack into the installer. Runtime
