@@ -1,3 +1,9 @@
+## 0.6.80
+
+- Automatically download and install a private Eclipse Temurin JDK 25 when no Java 25 runtime is available.
+- Launch Minecraft with JDK 25 without requiring administrator privileges or changes to system Java settings.
+- Reuse the installed runtime for future launches.
+
 ## 0.6.79
 
 - Publish the updated Windows launcher with Fabric Loader 0.20.1 for Sodium Extra compatibility.
