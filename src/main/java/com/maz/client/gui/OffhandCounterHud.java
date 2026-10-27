@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 
 
@@ -30,7 +30,7 @@ public final class OffhandCounterHud {
         refresh(client);
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         resolveModule();
         if (offhandCounterModule == null || !offhandCounterModule.isEnabled() || client.player == null) return;

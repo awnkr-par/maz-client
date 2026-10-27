@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.LivingEntity;
 
 
@@ -41,7 +41,7 @@ public final class MountHealthHud {
         }
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         resolveModule();
         if (module == null || !module.isEnabled() || client.player == null || !(client.player.getVehicle() instanceof LivingEntity)) return;

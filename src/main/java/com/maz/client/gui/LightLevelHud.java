@@ -5,7 +5,7 @@ import com.maz.client.module.Module;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LightLayer;
 
@@ -33,7 +33,7 @@ public final class LightLevelHud {
         }
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         resolveModule();
         if (lightLevelModule == null || !lightLevelModule.isEnabled() || client.level == null || client.player == null) return;

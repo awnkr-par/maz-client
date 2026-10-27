@@ -6,7 +6,7 @@ import com.maz.client.module.Module;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +59,7 @@ public final class LastDeathHud {
         wasDead = dead;
     }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         loadStateOnce();
 
