@@ -5,6 +5,12 @@
 - Improve Java 25 selection and startup error reporting for mods that require Java 25+.
 - Refuse to publish a release when the current MazClient JAR cannot be compiled; never substitute an older cloud-channel JAR.
 
+## 0.6.77
+
+- Remove partial launcher installer downloads and their temporary directories when downloading or SHA-256 verification fails.
+- Clean up installer files if starting the downloaded Windows installer fails.
+- Preserve the original update failure when best-effort temporary-file cleanup is unsuccessful.
+
 ## 0.6.76
 
 - Prevent launcher releases from silently overwriting older version tags when a new release cannot be created.

@@ -252,31 +252,49 @@ public sealed class CloudUpdateService
         var installer = await ResolveLauncherInstallerAsync(manifest.LauncherVersion);
         var tempRoot = Path.Combine(Path.GetTempPath(), "MazLauncherInstaller-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempRoot);
-        var installerPath = Path.Combine(tempRoot, installer.Name);
-
-        await using (var source = await http.GetStreamAsync(installer.Url))
-        await using (var destination = new FileStream(installerPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+        try
         {
-            await source.CopyToAsync(destination);
-            await destination.FlushAsync();
+            var installerPath = Path.Combine(tempRoot, installer.Name);
+
+            await using (var source = await http.GetStreamAsync(installer.Url))
+            await using (var destination = new FileStream(installerPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                await source.CopyToAsync(destination);
+                await destination.FlushAsync();
+            }
+
+            if (!File.Exists(installerPath) || new FileInfo(installerPath).Length < 1024 * 1024)
+                throw new InvalidDataException("Downloaded MazLauncher installer is missing or unexpectedly small.");
+
+            var downloadedHash = await ComputeSha256Async(installerPath);
+            if (!string.Equals(downloadedHash, installer.Sha256, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("Downloaded MazLauncher installer failed GitHub SHA256 verification.");
+
+            var process = Process.Start(new ProcessStartInfo
+            {
+                FileName = installerPath,
+                Arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS",
+                UseShellExecute = true,
+                WorkingDirectory = tempRoot
+            });
+
+            if (process == null)
+                throw new InvalidOperationException("Could not start the downloaded MazLauncher installer.");
+
+            process.Dispose();
+            Environment.Exit(0);
         }
-
-        if (!File.Exists(installerPath) || new FileInfo(installerPath).Length < 1024 * 1024)
-            throw new InvalidDataException("Downloaded MazLauncher installer is missing or unexpectedly small.");
-
-        var downloadedHash = await ComputeSha256Async(installerPath);
-        if (!string.Equals(downloadedHash, installer.Sha256, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidDataException("Downloaded MazLauncher installer failed GitHub SHA256 verification.");
-
-        Process.Start(new ProcessStartInfo
+        catch
         {
-            FileName = installerPath,
-            Arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS",
-            UseShellExecute = true,
-            WorkingDirectory = tempRoot
-        });
-
-        Environment.Exit(0);
+            // Cleanup is best-effort so it cannot hide the original download or launch error.
+            try
+            {
+                Directory.Delete(tempRoot, recursive: true);
+            }
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { }
+            throw;
+        }
     }
 }
 
