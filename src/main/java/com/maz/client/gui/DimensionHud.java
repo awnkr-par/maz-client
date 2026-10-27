@@ -40,7 +40,7 @@ public final class DimensionHud {
         int alpha = LAYOUT.opacity();
         graphics.fill(x, y, x + dimensionWidth, y + 18, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + 18, withAlpha(ACCENT, alpha));
-        graphics.drawString(client.font, dimensionText, x + 7, y + 6, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, dimensionText, x + 7, y + 6, adaptiveTextColor(alpha), false);
     }
 
     private static void resolveModule() {

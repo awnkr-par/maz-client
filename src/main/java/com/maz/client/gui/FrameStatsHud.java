@@ -228,7 +228,7 @@ public final class FrameStatsHud {
         }
         graphics.fill(x, y, x + cachedWidth, y + 18, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + 18, withAlpha(accent, alpha));
-        graphics.drawString(client.font, text, x + 7, y + 6, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, text, x + 7, y + 6, adaptiveTextColor(alpha), false);
     }
 
     private static int adaptiveTextColor(int alpha) {

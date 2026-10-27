@@ -50,7 +50,7 @@ public final class CompassHud implements ClientModInitializer {
 
         graphics.fill(x, y, x + width, y + height, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + height, withAlpha(ACCENT, alpha));
-        graphics.drawString(client.font, left, x + 12, y + 8, withAlpha(MUTED, 255), false);
+        graphics.text(client.font, left, x + 12, y + 8, withAlpha(MUTED, 255), false);
 
         String center = direction + "  " + degrees + "°";
         int centerWidth = CENTER_WIDTHS[degrees];
@@ -59,7 +59,7 @@ public final class CompassHud implements ClientModInitializer {
             CENTER_WIDTHS[degrees] = centerWidth;
         }
         int centerX = x + width / 2 - centerWidth / 2;
-        graphics.drawString(client.font, center, centerX, y + 8, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, center, centerX, y + 8, adaptiveTextColor(alpha), false);
 
         int rightWidth = DIRECTION_WIDTHS[rightIndex];
         if (rightWidth == 0) {
@@ -67,7 +67,7 @@ public final class CompassHud implements ClientModInitializer {
             DIRECTION_WIDTHS[rightIndex] = rightWidth;
         }
         int rightX = x + width - 12 - rightWidth;
-        graphics.drawString(client.font, right, rightX, y + 8, withAlpha(MUTED, 255), false);
+        graphics.text(client.font, right, rightX, y + 8, withAlpha(MUTED, 255), false);
     }
 
     private static int directionIndexFor(float yaw) {

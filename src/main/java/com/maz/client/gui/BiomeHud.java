@@ -43,7 +43,7 @@ public final class BiomeHud {
         int alpha = LAYOUT.opacity();
         graphics.fill(x, y, x + biomeWidth, y + 18, withAlpha(BACKGROUND, alpha));
         graphics.fill(x, y, x + 3, y + 18, withAlpha(ACCENT, alpha));
-        graphics.drawString(client.font, biomeText, x + 7, y + 6, adaptiveTextColor(alpha), false);
+        graphics.text(client.font, biomeText, x + 7, y + 6, adaptiveTextColor(alpha), false);
     }
 
     private static void resolveModule() {
