@@ -1,3 +1,9 @@
+## 1.11.3
+
+- Fix Minecraft 26.2 startup crash caused by the FPS particle filter Mixin using the wrong callback signature.
+- Correct ParticleGroup.add injection to use CallbackInfoReturnable so MazClient can initialize.
+- TierTagger gamemode service DNS errors remain nonfatal and unrelated to this startup crash.
+
 ## 1.11.2
 
 - Require Fabric Loader 0.20.1 for compatibility with the updated 26.2 mod stack; build with non-remapping Fabric Loom for unobfuscated Minecraft.
