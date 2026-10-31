@@ -1,3 +1,9 @@
+## 0.6.81
+
+- Fix MazClient cloud auto-update when an older version remains selected in the launcher.
+- Always resolve the current cloud MazClient version before launching Minecraft 26.2.
+- Automatically install the latest MazClient into its versioned installation without manual installer downloads.
+
 ## 0.6.80
 
 - Automatically download and install a private Eclipse Temurin JDK 25 when no Java 25 runtime is available.
