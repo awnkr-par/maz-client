@@ -1,3 +1,9 @@
+## 1.11.4
+
+- Fix Ping HUD showing misleading near-zero latency while actual Minecraft server latency is high.
+- Use Minecraft's player-list server-reported latency rather than a separate TCP connection timing probe.
+- Keep existing ping statistics and quality indicators based on the corrected latency source.
+
 ## 1.11.3
 
 - Fix Minecraft 26.2 startup crash caused by the FPS particle filter Mixin using the wrong callback signature.
