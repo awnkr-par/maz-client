@@ -287,6 +287,19 @@ public sealed class LauncherService
 
         if (string.Equals(minecraftVersion, CompatibilityMinecraftVersion, StringComparison.OrdinalIgnoreCase))
             mazClientVersion = CompatibilityMazClientVersion;
+        else
+        {
+            // Always upgrade the active 26.2 installation to the published cloud build.
+            // The version picker must not pin an outdated client indefinitely.
+            var cloud = await GetCloudManifestAsync();
+            if (cloud != null && !string.IsNullOrWhiteSpace(cloud.MazClientVersion)
+                && !string.Equals(cloud.MazClientVersion, "unknown", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.Equals(mazClientVersion, cloud.MazClientVersion, StringComparison.OrdinalIgnoreCase))
+                    progress?.Invoke($"Auto-updating MazClient {mazClientVersion} to {cloud.MazClientVersion}...", 3);
+                mazClientVersion = cloud.MazClientVersion;
+            }
+        }
 
         var gameDir = GetMazInstallationDirectory(mazClientVersion, minecraftVersion);
         Directory.CreateDirectory(gameDir);
