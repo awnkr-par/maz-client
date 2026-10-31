@@ -4,7 +4,6 @@ import com.maz.client.MazClient;
 import com.maz.client.module.CombatStats;
 import com.maz.client.module.CpsModule;
 import com.maz.client.module.Module;
-import com.maz.client.module.LivePingProbe;
 import com.maz.client.module.PingModule;
 
 import net.minecraft.client.DeltaTracker;
@@ -97,7 +96,6 @@ public class MazHud {
     public static void tick(Minecraft client) {
         resolveModules();
         refreshRealtimeText(client);
-        if (enabled(pingModule)) LivePingProbe.tick(client);
 
         if (client.player == null) {
             if (hadPlayer) resetPlayerTelemetry();
@@ -264,13 +262,6 @@ public class MazHud {
 
     private static void refreshPingText(Minecraft client) {
         if (!enabled(pingModule) || !(pingModule instanceof PingModule ping) || client.getConnection() == null) return;
-        int livePing = LivePingProbe.getLatestPingMs();
-        if (livePing >= 0) {
-            ping.sample(livePing);
-            pingText = ping.getDisplayText();
-            return;
-        }
-
         PlayerInfo info = client.getConnection().getPlayerInfo(client.player.getUUID());
         if (info != null) {
             ping.sample(info.getLatency());
