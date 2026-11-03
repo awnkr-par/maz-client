@@ -3,13 +3,19 @@ name: Build MazLauncher Linux Preview
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main, linux-launcher-foundation]
     paths:
       - 'launcher/MazLauncher.Linux/**'
+      - 'linux/**'
+      - '.github/workflows/linux-launcher.yml'
+  pull_request:
+    paths:
+      - 'launcher/MazLauncher.Linux/**'
+      - 'linux/**'
       - '.github/workflows/linux-launcher.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   linux-preview:
@@ -19,11 +25,66 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Publish Linux x64
+      - name: Publish Avalonia Linux x64
         run: dotnet publish launcher/MazLauncher.Linux/MazLauncher.Linux.csproj -c Release -r linux-x64 --self-contained true -o out/linux-x64
-      - name: Package
+      - name: Package Avalonia preview
         run: tar -czf MazLauncher-Linux-x64-preview.tar.gz -C out/linux-x64 .
       - uses: actions/upload-artifact@v4
         with:
           name: MazLauncher-Linux-x64-preview
           path: MazLauncher-Linux-x64-preview.tar.gz
+      - name: Check Python desktop source
+        run: python3 -m compileall -q linux
+      - name: Build Debian preview
+        run: bash linux/build-deb.sh 0.1.0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MazLauncher-Linux-deb-preview
+          path: dist/*.deb
+
+  publish-linux-release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/linux-launcher-foundation'
+    needs: linux-preview
+    runs-on: ubuntu-latest
+    concurrency:
+      group: maz-linux-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: MazLauncher-Linux-*-preview
+          merge-multiple: true
+          path: release-assets
+      - name: Publish full Linux release with changelog
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          short="${SHA:0:7}"
+          version="$(sed -n 's/.*<Version>\([^<]*\)<\/Version>.*/\1/p' launcher/MazLauncher.Linux/MazLauncher.Linux.csproj | head -n1)"
+          test -n "$version" || { echo "Missing launcher version" >&2; exit 1; }
+          tag="linux-v${version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; bump the project version before publishing." >&2
+            exit 1
+          fi
+          {
+            echo "# MazLauncher Linux release"
+            echo
+            echo "Version: \`${version}\` (commit \`${short}\`)"
+            echo
+            echo "## What changed"
+            git log -1 --format='- %s'
+            echo
+            echo "## Contents"
+            echo "- Avalonia Linux x64 preview archive"
+            echo "- Debian development preview package"
+            echo
+            echo "## Known limitations"
+            echo "- Linux Minecraft launch and Microsoft login are not fully implemented."
+            echo "- Some Linux features are still under development; see limitations above."
+          } > release-notes.md
+          gh release create "$tag" release-assets/* --target "$SHA" --title "MazLauncher Linux v${version}" --notes-file release-notes.md
